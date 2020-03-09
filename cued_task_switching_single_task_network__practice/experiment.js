@@ -42,7 +42,7 @@ function getCurrTask() {
 // returns dictionary with keys for and fingers for the two tasks. set [0] = magnitude, set [1] = parity
 function getResponseKeys() {
 	if (getMotorPerm()==0) {
-		return response_keys
+		return {key: [[37,39],[37,39]], key_name: [["index finger","middle finger"],["index finger","middle finger"]]}
 	} else if (getMotorPerm()==1) {
 		return {key: [[39,37],[37,39]], key_name: [["middle finger","index finger"],["index finger","middle finger"]]}
 	} else if (getMotorPerm()==2) {
@@ -140,8 +140,8 @@ function assessPerformance() {
     //record choices participants made
   var choice_counts = {}
   choice_counts[-1] = 0
-  choice_counts[77] = 0
-  choice_counts[90] = 0
+  choice_counts[37] = 0
+  choice_counts[39] = 0
 
   for (var i = 0; i < experiment_data.length; i++) {
     if (experiment_data[i].trial_id == 'test_trial') {
@@ -364,7 +364,7 @@ var instructTimeThresh = 0 ///in seconds
 var credit_var = 0
 
 // task specific variables
-var response_keys = {key: [37,39], key_name: ["index finger","middle finger"]}
+var response_keys = {key: [[37,39],[37,39]], key_name: [["index finger","middle finger"],["index finger","middle finger"]]}
 var choices = response_keys.key
 var practice_length = 16 // must be divisible by 4
 var refresh_length = 8 //must be divisible by 4

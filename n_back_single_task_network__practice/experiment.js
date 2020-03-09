@@ -189,7 +189,7 @@ var randomDraw = function(lst) {
 
 var createTrialTypes = function(numTrialsPerBlock, delay){
 	first_stims = []
-	for (var i = 0; i < 3; i++){
+	for (var i = 0; i < 2; i++){ //SHIFTED BECAUSE MAX DELAY == 2 NOW
 		if (i < delay){
 			n_back_condition = 'N/A'
 		} else {
@@ -236,7 +236,7 @@ var createTrialTypes = function(numTrialsPerBlock, delay){
 	
 	new_stims = []
 	for (i = 0; i < stim_len; i++){
-		if (i < 3){
+		if (i < 2){ //dropped to 2 because we have a max of 2-back
 			stim = stims.shift()
 			n_back_condition = stim.n_back_condition
 			probe = stim.probe

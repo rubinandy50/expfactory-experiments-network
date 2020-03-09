@@ -40,17 +40,17 @@ function getMotorPerm() {
 
 function getChoices() {
 	if (getMotorPerm()==0) {
-		return choices
+		return [choices[1], choices[0]] 
 	} else if (getMotorPerm()==1) {
-		return [choices[1], choices[0]]
+		return choices
 	}
 }
 
 function getResponses() {
 	if (getMotorPerm()==0) {
-		return ['index finger', 'middle finger']
+		return ['middle finger', 'index finger'] 
 	} else if (getMotorPerm()==1) {
-		return ['middle finger', 'index finger']
+		return ['index finger', 'middle finger']
 	}
 }
 

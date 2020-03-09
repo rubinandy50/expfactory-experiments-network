@@ -2,7 +2,32 @@
 /*       Define Helper Functions        */
 /* ************************************ */
 
-//Functions added for in-person sessions
+//FUNCTIONS FOR GETTING ITIs
+
+
+function getdesignITIs(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+} 
+function getdesignEvents(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/events_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+}  
+
+function insertBufferITIs(design_ITIs) {
+	var buffer_ITIs = genITIs()
+	var out_ITIs = []
+	while(design_ITIs.length > 0) {
+		curr_block_ITIs = design_ITIs.slice(0,numTrialsPerBlock) //get this current block's ITIs
+		design_ITIs = design_ITIs.slice(numTrialsPerBlock,) //remove this current block's ITIs from des_ITIs
+		out_ITIs = out_ITIs.concat(buffer_ITIs.slice(0,2)) //get 2 buffer ITIs to start each block
+		buffer_ITIs = buffer_ITIs.slice(2,) //remove the just used buffer ITIs from the buffer ITI array
+		out_ITIs = out_ITIs.concat(curr_block_ITIs) //add this current block's ITI's to the out array
+	}
+	return out_ITIs
+}
+
+//Get ITIs from exponential distribution - used as backup
 function genITIs() { 
 	mean_iti = 0.5 //mean and standard deviation of 0.5 secs
 	min_thresh = 0
@@ -23,11 +48,17 @@ function genITIs() {
 
 function getITI_stim() { //added for fMRI compatibility
 	var currITI = ITIs_stim.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
 function getITI_resp() { //added for fMRI compatibility
 	var currITI = ITIs_resp.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
@@ -203,7 +234,7 @@ var randomDraw = function(lst) {
 
 var createTrialTypes = function(numTrialsPerBlock, delay){
 	first_stims = []
-	for (var i = 0; i < 3; i++){
+	for (var i = 0; i < 2; i++){ //dropped to 2 because we have a max of 2-back
 		if (i < delay){
 			n_back_condition = 'N/A'
 		} else {
@@ -230,27 +261,40 @@ var createTrialTypes = function(numTrialsPerBlock, delay){
 	}
 	
 	stims = []
-	
-	for(var numIterations = 0; numIterations < numTrialsPerBlock/n_back_conditions.length; numIterations++){
-		for (var numNBackConds = 0; numNBackConds < n_back_conditions.length; numNBackConds++){
-			
-			n_back_condition = n_back_conditions[numNBackConds]
-			
+	if (numTrialsPerBlock == practice_len) { // for practice blocks, generate the stimuli randomly
+		//ASSUMES PRACTICE_LEN != EXP_LEN/NUMTESTBLOCKS
+		for(var numIterations = 0; numIterations < numTrialsPerBlock/n_back_conditions.length; numIterations++){
+			for (var numNBackConds = 0; numNBackConds < n_back_conditions.length; numNBackConds++){
+				
+				n_back_condition = n_back_conditions[numNBackConds]
+				
+				stim = {
+					n_back_condition: n_back_condition
+					}
+				stims.push(stim)
+			}
+		}
+		stims = jsPsych.randomization.repeat(stims,1)
+	} else { //if it's a test trial, grab the event types from the design
+		curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
+		des_events = des_events.slice(numTrialsPerBlock,)
+		for (var idx = 0; idx < numTrialsPerBlock; idx++) {
+			n_back_condition = curr_des_events[idx]
 			stim = {
 				n_back_condition: n_back_condition
 				}
 			stims.push(stim)
 		}
 	}
-	
-	stims = jsPsych.randomization.repeat(stims,1)
+
+
 	stims = first_stims.concat(stims)
 	
 	stim_len = stims.length
 	
 	new_stims = []
 	for (i = 0; i < stim_len; i++){
-		if (i < 3){
+		if (i < 2){ //SHIFTED BECAUSE MAX DELAY == 2 NOW
 			stim = stims.shift()
 			n_back_condition = stim.n_back_condition
 			probe = stim.probe
@@ -373,25 +417,12 @@ var possible_responses = [['index finger', 89],['middle finger', 71]]
 var letters = 'bBdDgGtTvV'.split("")
 							 
 
-
-
-// var prompt_text_list = '<ul style="text-align:left;">'+
-// 						'<li>Match the current letter to the letter that appeared some number of trials ago</li>' +
-// 						'<li>If they match, press your '+possible_responses[0][0]+'</li>' +
-// 					    '<li>If they mismatch, press your '+possible_responses[1][0]+'</li>' +
-// 					  '</ul>'
-
-// var prompt_text = '<div class = prompt_box>'+
-// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Match the current letter to the letter that appeared 1 trial ago</p>' +
-// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">If they match, press your '+possible_responses[0][0]+'</p>' +
-// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">If they mismatch, press your '+possible_responses[1][0]+'</p>' +
-// 				  '</div>'
-
 var current_trial = 0
 var current_block = 0
 
 //PRE LOAD IMAGES HERE
 var pathSource = "/static/experiments/n_back_single_task_network__fmri/images/"
+var pathDesignSource = "/static/experiments/n_back_single_task_network__fmri/designs/" //ADDED FOR fMRI SEQUENCES
 var lettersPreload = ['B','D','G','T','V']
 var casePreload = ['lowercase','uppercase']
 var images = []
@@ -472,15 +503,14 @@ var refresh_feedback_block = {
 		refresh_trial_id = "practice-no-stop-feedback"
 		refresh_feedback_timing = 10000
 		refresh_response_ends = false
-		if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
-			ITIs_stim = genITIs()
-			ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
-		}
+		// if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
+		// 	ITIs_stim = genITIs()
+		// 	ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
+		// }
 
 	} 
 
 };
-
 
 var refresh_fixation_block = {
 	type: 'poldrack-single-stim',
@@ -530,6 +560,29 @@ var feedback_block = {
 /* ************************************ */
 /*        Set up timeline blocks        */
 /* ************************************ */
+
+var des_ITIs = []
+var des_events = []
+
+var design_setup_block = {
+	type: 'survey-text',
+	data: {
+		trial_id: "design_setup"
+	},
+	questions: [
+		[
+			"<p class = center-block-text>Design permutation (0-4):</p>"
+		]
+	], on_finish: async function(data) {
+		design_perm =parseInt(data.responses.slice(7, 10))
+		des_ITIs = await getdesignITIs(design_perm)
+		des_ITIs = des_ITIs.map(Number)
+		des_ITIs = insertBufferITIs(des_ITIs)
+		ITIs_stim = des_ITIs.slice(0)
+		ITIs_resp = des_ITIs.slice(0)
+		des_events = await getdesignEvents(design_perm)
+	}
+}
 
 var motor_setup_block = {
 	type: 'survey-text',
@@ -745,6 +798,7 @@ var testNode = {
 
 var n_back_single_task_network__fmri_experiment = []
 
+n_back_single_task_network__fmri_experiment.push(design_setup_block); //exp_input
 n_back_single_task_network__fmri_experiment.push(motor_setup_block); //exp_input
 test_keys(n_back_single_task_network__fmri_experiment, [possible_responses[0][1],possible_responses[1][1]])
 

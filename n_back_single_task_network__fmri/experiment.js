@@ -2,9 +2,7 @@
 /*       Define Helper Functions        */
 /* ************************************ */
 
-//FUNCTIONS FOR GETTING ITIs
-
-
+//FUNCTIONS FOR GETTING FMRI SEQUENCES
 function getdesignITIs(design_num) {
 	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
 	return x
@@ -18,10 +16,12 @@ function insertBufferITIs(design_ITIs) {
 	var buffer_ITIs = genITIs()
 	var out_ITIs = []
 	while(design_ITIs.length > 0) {
-		curr_block_ITIs = design_ITIs.slice(0,numTrialsPerBlock) //get this current block's ITIs
-		design_ITIs = design_ITIs.slice(numTrialsPerBlock,) //remove this current block's ITIs from des_ITIs
 		out_ITIs = out_ITIs.concat(buffer_ITIs.slice(0,2)) //get 2 buffer ITIs to start each block
 		buffer_ITIs = buffer_ITIs.slice(2,) //remove the just used buffer ITIs from the buffer ITI array
+		
+		curr_block_ITIs = design_ITIs.slice(0,numTrialsPerBlock) //get this current block's ITIs
+		design_ITIs = design_ITIs.slice(numTrialsPerBlock,) //remove this current block's ITIs from des_ITIs
+
 		out_ITIs = out_ITIs.concat(curr_block_ITIs) //add this current block's ITI's to the out array
 	}
 	return out_ITIs

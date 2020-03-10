@@ -2,6 +2,59 @@
 /* Define helper functions */
 /* ************************************ */
 
+//FUNCTIONS FOR GETTING FMRI SEQUENCES
+function getdesignITIs(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+} 
+function getdesignEvents(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/events_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+}  
+
+function makeDesignSwitches(design_events) {
+  var task_switches_arr = []
+  for (var i = 0; i < design_events.length; i++) {
+    switch (design_events[i]) {
+      case "tstay_cstay":
+        task_switches_arr.push({
+          task_switch: 'stay',
+          cue_switch: 'stay'
+        })
+        break
+      case "tstay_cswitch":
+        task_switches_arr.push({
+          task_switch: 'stay',
+          cue_switch: 'switch'
+        })
+        break
+      case "tswitch_cswitch":
+        task_switches_arr.push({
+          task_switch: 'switch',
+          cue_switch: 'switch'
+        })
+        break
+    }
+  }
+  return task_switches_arr
+}
+
+
+function insertBufferITIs(design_ITIs) { //required to add a buffer ITI for before the 'na' trial (the first trial of the block)
+	var buffer_ITIs = genITIs()
+	var out_ITIs = []
+	while(design_ITIs.length > 0) {
+    out_ITIs = out_ITIs.concat(buffer_ITIs.slice(0,1)) //get 1 buffer ITI to start each block
+    buffer_ITIs = buffer_ITIs.slice(1,) //remove the just used buffer ITI from the buffer ITI array
+    
+		curr_block_ITIs = design_ITIs.slice(0,numTrialsPerBlock) //get this current block's ITIs
+		design_ITIs = design_ITIs.slice(numTrialsPerBlock,) //remove this current block's ITIs from des_ITIs
+
+		out_ITIs = out_ITIs.concat(curr_block_ITIs) //add this current block's ITI's to the out array
+	}
+	return out_ITIs
+}
+
 //Functions added for in-person sessions
 function genITIs() { 
 	mean_iti = 0.5 //mean and standard deviation of 0.5 secs
@@ -23,11 +76,17 @@ function genITIs() {
 
 function getITI_stim() { //added for fMRI compatibility
 	var currITI = ITIs_stim.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
 function getITI_resp() { //added for fMRI compatibility
 	var currITI = ITIs_resp.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
@@ -417,7 +476,7 @@ for (var t = 0; t < task_switch_types.length; t++) {
     })
   }
 }
-var task_switches = jsPsych.randomization.repeat(task_switches_arr, practice_length / 4)
+var task_switches = jsPsych.randomization.repeat(task_switches_arr, practice_length / 4) //KEEP FOR PRACTICE
 task_switches.unshift({task_switch: 'na', cue_switch: 'na', go_no_go_type: jsPsych.randomization.repeat(['go','nogo'],1).pop()})
 
 var curr_task = randomDraw(getKeys(tasks))
@@ -429,20 +488,10 @@ var current_trial = 0
 var CTI = 150 //cue-target-interval or cue's length (7/29, changed from 300 to 150; less time to process the cue should increase cue switch costs and task switch costs)
 var exp_stage = 'practice' // defines the exp_stage, switched by start_test_block
 
-// var task_list = '<ul><li><strong><i>Parity</i> or <i>Odd-Even</i>: Press your ' + response_keys.key_name[
-//     0] + ' key if even and your ' + response_keys.key_name[1] + ' key if odd.' +
-//   '</li><li><i>Magnitude</i> or <i>High-Low</i>: Press your ' + response_keys.key_name[
-//     0] + ' key if the number is greater than 5 and your ' + response_keys.key_name[1] +
-//   ' key if less than 5.</strong></li></ul>'
-
-// var prompt_task_list = '<ul style="text-align:left"><li><i>Parity</i> or <i>Odd-Even</i>: ' + response_keys.key_name[0] +
-//   ' if even and ' + response_keys.key_name[1] + ' if odd.' +
-//   '</li><li><i>Magnitude</i> or <i>High-Low</i>: ' + response_keys.key_name[0] +
-//   ' if >5 and ' + response_keys.key_name[1] + ' if <5.</li></ul>'
-
 
 //PRE LOAD IMAGES HERE
 var pathSource = "/static/experiments/cued_task_switching_single_task_network__fmri/images/"
+var pathDesignSource = "/static/experiments/cued_task_switching_single_task_network__fmri/designs/" //ADDED FOR fMRI SEQUENCES
 var numbersPreload = ['1','2','3','4','6','7','8','9']
 var images = []
 for(i=0;i<numbersPreload.length;i++){
@@ -497,10 +546,10 @@ var refresh_intro_block = {
 		refresh_trial_id = "practice-no-stop-feedback"
 		refresh_feedback_timing = 10000
 		refresh_response_ends = false
-		if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
-			ITIs_stim = genITIs()
-			ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
-    }
+		// if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
+		// 	ITIs_stim = genITIs()
+		// 	ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
+    // }
     var task_switches = jsPsych.randomization.repeat(task_switches_arr, refresh_length / 4)
     task_switches.unshift({task_switch: 'na', cue_switch: 'na', go_no_go_type: jsPsych.randomization.repeat(['go','nogo'],1).pop()})
     var refreshStims = genStims(refresh_length + 1)
@@ -525,10 +574,10 @@ var refresh_feedback_block = {
 		refresh_trial_id = "practice-no-stop-feedback"
 		refresh_feedback_timing = 10000
 		refresh_response_ends = false
-		if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
-			ITIs_stim = genITIs()
-			ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
-    }
+		// if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
+		// 	ITIs_stim = genITIs()
+		// 	ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
+    // }
 	} 
 
 };
@@ -579,6 +628,31 @@ var feedback_block = {
 /********************************************/
 /*				Set up nodes				*/
 /********************************************/
+
+var des_ITIs = []
+var des_events = []
+var des_task_switches = []
+
+var design_setup_block = {
+	type: 'survey-text',
+	data: {
+		trial_id: "design_setup"
+	},
+	questions: [
+		[
+			"<p class = center-block-text>Design permutation (0-4):</p>"
+		]
+	], on_finish: async function(data) {
+		design_perm =parseInt(data.responses.slice(7, 10))
+		des_ITIs = await getdesignITIs(design_perm)
+		des_ITIs = des_ITIs.map(Number)
+		des_ITIs = insertBufferITIs(des_ITIs)
+		ITIs_stim = des_ITIs.slice(0)
+		ITIs_resp = des_ITIs.slice(0)
+    des_events = await getdesignEvents(design_perm)
+    des_task_switches = makeDesignSwitches(des_events)
+	}
+}
 
 var motor_setup_block = {
 	type: 'survey-text',
@@ -722,7 +796,9 @@ var refreshNode = {
     refresh_feedback_text +=
     '</p><p class = instruct-text>Done with this practice.' 
 
-    task_switches = jsPsych.randomization.repeat(task_switches_arr, numTrialsPerBlock / 4)
+    // task_switches = jsPsych.randomization.repeat(task_switches_arr, numTrialsPerBlock / 4) //TO BE CHANGED OUT w/ DES_EVENTS
+    task_switches = des_task_switches.slice(0,numTrialsPerBlock) //GRAB NEWEST BLOCKS WORTH OF TRIALS
+    des_task_switches = des_task_switches.slice(numTrialsPerBlock,) //SHAVE OFF THIS BLOCK FROM des_task_switches
     task_switches.unshift({task_switch: 'na', cue_switch: 'na', go_no_go_type: jsPsych.randomization.repeat(['go','nogo'],1).pop()})
     stims = genStims(numTrialsPerBlock + 1)
     exp_stage = 'test'
@@ -876,7 +952,9 @@ var testNode0 = {
   loop_function: function(data) {
   testCount += 1
   current_trial = 0
-  task_switches = jsPsych.randomization.repeat(task_switches_arr, numTrialsPerBlock / 4)
+  task_switches = des_task_switches.slice(0,numTrialsPerBlock) //GRAB NEWEST BLOCKS WORTH OF TRIALS
+  des_task_switches = des_task_switches.slice(numTrialsPerBlock,) //SHAVE OFF THIS BLOCK FROM des_task_switches
+  // task_switches = jsPsych.randomization.repeat(task_switches_arr, numTrialsPerBlock / 4) //TO BE CHANGED OUT W/ DES_EVENTS
   task_switches.unshift({task_switch: 'na', cue_switch: 'na', go_no_go_type: jsPsych.randomization.repeat(['go','nogo'],1).pop()})
   stims = genStims(numTrialsPerBlock + 1)
   
@@ -931,7 +1009,9 @@ var testNode = {
   loop_function: function(data) {
   testCount += 1
   current_trial = 0
-  task_switches = jsPsych.randomization.repeat(task_switches_arr, numTrialsPerBlock / 4)
+  task_switches = des_task_switches.slice(0,numTrialsPerBlock) //GRAB NEWEST BLOCKS WORTH OF TRIALS
+  des_task_switches = des_task_switches.slice(numTrialsPerBlock,) //SHAVE OFF THIS BLOCK FROM des_task_switches
+  // task_switches = jsPsych.randomization.repeat(task_switches_arr, numTrialsPerBlock / 4) //TO BE CHANGED OUT W/ DES_EVENTS
   task_switches.unshift({task_switch: 'na', cue_switch: 'na', go_no_go_type: jsPsych.randomization.repeat(['go','nogo'],1).pop()})
   stims = genStims(numTrialsPerBlock + 1)
   
@@ -988,6 +1068,7 @@ var testNode = {
 /* create experiment definition array */
 var cued_task_switching_single_task_network__fmri_experiment = [];
 
+cued_task_switching_single_task_network__fmri_experiment.push(design_setup_block); //exp_input
 cued_task_switching_single_task_network__fmri_experiment.push(motor_setup_block); //exp_input
 
 test_keys(cued_task_switching_single_task_network__fmri_experiment, response_keys.key[0]);

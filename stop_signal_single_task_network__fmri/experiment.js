@@ -1,6 +1,15 @@
 /* ************************************ */
 /*       Define Helper Functions        */
 /* ************************************ */
+//FUNCTIONS FOR GETTING FMRI SEQUENCES
+function getdesignITIs(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+} 
+function getdesignEvents(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/events_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+} 
 
 //Functions added for in-person sessions
 function genITIs() { 

@@ -2,6 +2,46 @@
 /* Define helper functions */
 /* ************************************ */
 
+//FUNCTIONS FOR GETTING FMRI SEQUENCES
+function getdesignITIs(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+} 
+function getdesignEvents(design_num) {
+	x = fetch(pathDesignSource+'design_'+design_num+'/events_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
+	return x
+} 
+
+function getRandomInt(max) {
+	return Math.floor(Math.random() * Math.floor(max));
+  }
+
+function makeDesignTrialTypes(design_events) {
+	//['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN']
+	//neurodesign's events refer to the middle letter
+	var trial_type_arr = []
+	for (var i = 0; i < design_events.length; i++) {
+	  switch (design_events[i]) {
+		case "td_same":
+			possible_events = ['SSS', 'DSD']
+			idx = getRandomInt(2)
+			trial_type_arr.push(possible_events[idx])
+		  break
+		case "td_diff":
+			possible_events = ['SDD', 'DDD', 'DDS']
+			idx = getRandomInt(3)
+			trial_type_arr.push(possible_events[idx])
+		  break
+		case "td_na":
+			possible_events = ['SNN', 'DNN']
+			idx = getRandomInt(2)
+			trial_type_arr.push(possible_events[idx])
+		  break
+	  }
+	}
+	return trial_type_arr
+  }
+
 //Functions added for in-person sessions
 function genITIs() { 
 	mean_iti = 0.5 //mean and standard deviation of 0.5 secs
@@ -23,11 +63,17 @@ function genITIs() {
 
 function getITI_stim() { //added for fMRI compatibility
 	var currITI = ITIs_stim.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
 function getITI_resp() { //added for fMRI compatibility
 	var currITI = ITIs_resp.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
@@ -272,6 +318,7 @@ var practice_thresh = 3 // 3 blocks of 14 trials
 
 //PRE LOAD IMAGES HERE
 var pathSource = "/static/experiments/shape_matching_single_task_network__fmri/images/"
+var pathDesignSource = "/static/experiments/shape_matching_single_task_network__fmri/designs/" //ADDED FOR fMRI SEQUENCES
 var numbersPreload = ['1','2','3','4','5','6','7','8','9','10']
 var typePreload = ['probe','target','distractor']
 var images = []
@@ -324,10 +371,10 @@ var refresh_feedback_block = {
 		refresh_trial_id = "practice-no-stop-feedback"
 		refresh_feedback_timing = 10000
 		refresh_response_ends = false
-		if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
-			ITIs_stim = genITIs()
-			ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
-		}
+		// if (ITIs_stim.length===0) { //if ITIs haven't been generated, generate them!
+		// 	ITIs_stim = genITIs()
+		// 	ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
+		// }
 
 	} 
 
@@ -562,6 +609,29 @@ var feedback_block = {
 /*        Set up timeline blocks        */
 /* ************************************ */
 
+var design_setup_block = {
+	type: 'survey-text',
+	data: {
+		trial_id: "design_setup"
+	},
+	questions: [
+		[
+			"<p class = center-block-text>Design permutation (0-4):</p>"
+		]
+	], on_finish: async function(data) {
+		design_perm =parseInt(data.responses.slice(7, 10))
+		des_ITIs = await getdesignITIs(design_perm)
+		des_ITIs = des_ITIs.map(Number)
+		console.log(des_ITIs)
+		ITIs_stim = des_ITIs.slice(0)
+		console.log(ITIs_stim)
+		ITIs_resp = des_ITIs.slice(0)
+		console.log(ITIs_resp)
+		des_events = await getdesignEvents(design_perm)
+		des_trial_types = makeDesignTrialTypes(des_events)
+	}
+}
+
 var motor_setup_block = {
 	type: 'survey-text',
 	data: {
@@ -590,7 +660,9 @@ for (i = 0; i < practice_len; i++) {
 var refreshNode = {
 	timeline: refreshTrials,
 	loop_function: function(data) {
-		trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],numTrialsPerBlock/7)
+		trial_types = des_trial_types.slice(0, numTrialsPerBlock) //GRAB THIS COMING BLOCK'S TRIALS
+		des_trial_types = des_trial_types.slice(numTrialsPerBlock,) //shave off this block from the remaining trials
+		// trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],numTrialsPerBlock/7)
 		current_trial = 0 
 	
 		var sum_rt = 0
@@ -659,7 +731,9 @@ var testNode0 = {
 	timeline: testTrials0,
 	loop_function: function(data) {
 		testCount += 1
-		trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],numTrialsPerBlock/7)
+		trial_types = des_trial_types.slice(0, numTrialsPerBlock) //GRAB THIS COMING BLOCK'S TRIALS
+		des_trial_types = des_trial_types.slice(numTrialsPerBlock,) //shave off this block from the remaining trials
+		// trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],numTrialsPerBlock/7)
 		current_trial = 0 
 	
 		var sum_rt = 0
@@ -723,7 +797,9 @@ var testNode = {
 	timeline: testTrials,
 	loop_function: function(data) {
 		testCount += 1
-		trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],numTrialsPerBlock/7)
+		trial_types = des_trial_types.slice(0, numTrialsPerBlock) //GRAB THIS COMING BLOCK'S TRIALS
+		des_trial_types = des_trial_types.slice(numTrialsPerBlock,) //shave off this block from the remaining trials
+		// trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],numTrialsPerBlock/7)
 		current_trial = 0 
 	
 		var sum_rt = 0
@@ -782,6 +858,7 @@ var testNode = {
 /* create experiment definition array */
 var shape_matching_single_task_network__fmri_experiment = [];
 
+shape_matching_single_task_network__fmri_experiment.push(design_setup_block); //exp_input
 shape_matching_single_task_network__fmri_experiment.push(motor_setup_block); //exp_input
 
 test_keys(shape_matching_single_task_network__fmri_experiment, choices)

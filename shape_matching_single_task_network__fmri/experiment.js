@@ -622,11 +622,8 @@ var design_setup_block = {
 		design_perm =parseInt(data.responses.slice(7, 10))
 		des_ITIs = await getdesignITIs(design_perm)
 		des_ITIs = des_ITIs.map(Number)
-		console.log(des_ITIs)
 		ITIs_stim = des_ITIs.slice(0)
-		console.log(ITIs_stim)
 		ITIs_resp = des_ITIs.slice(0)
-		console.log(ITIs_resp)
 		des_events = await getdesignEvents(design_perm)
 		des_trial_types = makeDesignTrialTypes(des_events)
 	}

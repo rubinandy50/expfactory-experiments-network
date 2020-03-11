@@ -1,6 +1,7 @@
 /* ************************************ */
 /*       Define Helper Functions        */
 /* ************************************ */
+
 //FUNCTIONS FOR GETTING FMRI SEQUENCES
 function getdesignITIs(design_num) {
 	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
@@ -32,11 +33,17 @@ function genITIs() {
 
 function getITI_stim() { //added for fMRI compatibility
 	var currITI = ITIs_stim.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
 function getITI_resp() { //added for fMRI compatibility
 	var currITI = ITIs_resp.shift()
+	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
+		currITI = 0.1
+	}
 	return currITI
 }
 
@@ -234,6 +241,20 @@ var getCategorizeFeedback = function(){
 		}
 	
 	}
+}
+
+var updateTrialTypesWithDesigns = function(stims, design_events){
+
+	var new_stims = []
+	for (var i = 0; i < design_events.length; i++) {
+		var curr_stim = {
+			stim: stims[i].stim,
+			correct_response: stims[i].correct_response,
+			stop_signal_condition: design_events[i]
+		}
+		new_stims.push(curr_stim)
+	}
+	return new_stims
 }
 
 var createTrialTypes = function(numTrialsPerBlock){
@@ -461,6 +482,7 @@ var possible_responses = [['index finger', 89], ['index finger', 89], ['middle f
 
 var postFileType = "'></img>"
 var pathSource = "/static/experiments/stop_signal_single_task_network__fmri/images/"
+var pathDesignSource = "/static/experiments/stop_signal_single_task_network__fmri/designs/" //ADDED FOR fMRI SEQUENCES
 var fileType = ".png"
 var preFileType = "<img class = center src='"
 
@@ -626,6 +648,26 @@ var test_feedback_block = {
 /*				Set up nodes				*/
 /********************************************/
 
+var design_setup_block = {
+	type: 'survey-text',
+	data: {
+		trial_id: "design_setup"
+	},
+	questions: [
+		[
+			"<p class = center-block-text>Design permutation (0-4):</p>"
+		]
+	], on_finish: async function(data) {
+		design_perm =parseInt(data.responses.slice(7, 10))
+		des_ITIs = await getdesignITIs(design_perm)
+		des_ITIs = des_ITIs.map(Number)
+		ITIs_stim = des_ITIs.slice(0)
+		ITIs_resp = des_ITIs.slice(0)
+		des_events = await getdesignEvents(design_perm)
+		// des_trial_types = makeDesignTrialTypes(des_events)
+	}
+}
+
 var motor_setup_block = {
 	type: 'survey-text',
 	data: {
@@ -637,7 +679,10 @@ var motor_setup_block = {
 		]
 	], on_finish: function(data) {
 		motor_perm=parseInt(data.responses.slice(7, 10))
-		stims = createTrialTypes(numTrialsPerBlock)
+		// stims = createTrialTypes(numTrialsPerBlock)
+		// first_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		// des_events = des_events.slice(numTrialsPerBlock,)
+		// stims = updateTrialTypesWithDesigns(stims, first_block_des_events)
 		refreshStims = createRefreshTrials(numRefreshIterations)
 		
 	}
@@ -715,6 +760,9 @@ var refreshNode = {
 	loop_function: function(data) {
 		current_trial = 0
 		stims = createTrialTypes(numTrialsPerBlock)
+		first_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		des_events = des_events.slice(numTrialsPerBlock,)
+		stims = updateTrialTypesWithDesigns(stims, first_block_des_events)
 		
 		var total_trials = 0
 		
@@ -885,6 +933,9 @@ var testNode0 = {
 		current_trial = 0
 		testCount += 1
 		stims = createTrialTypes(numTrialsPerBlock)
+		curr_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		des_events = des_events.slice(numTrialsPerBlock,)
+		stims = updateTrialTypesWithDesigns(stims, curr_block_des_events)
 		
 		var total_trials = 0
 		
@@ -984,6 +1035,9 @@ var testNode = {
 		current_trial = 0
 		testCount += 1
 		stims = createTrialTypes(numTrialsPerBlock)
+		curr_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		des_events = des_events.slice(numTrialsPerBlock,)
+		stims = updateTrialTypesWithDesigns(stims, curr_block_des_events)
 		
 		var total_trials = 0
 		
@@ -1086,6 +1140,7 @@ var testNode = {
 
 var stop_signal_single_task_network__fmri_experiment = []
 
+stop_signal_single_task_network__fmri_experiment.push(design_setup_block) //exp_input
 stop_signal_single_task_network__fmri_experiment.push(motor_setup_block) //exp_input
 stop_signal_single_task_network__fmri_experiment.push(SSD_setup_block) //exp_input
 

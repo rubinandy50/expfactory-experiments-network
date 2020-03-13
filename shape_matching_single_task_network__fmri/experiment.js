@@ -560,7 +560,9 @@ var refresh_block = {
 	fixation_stim: '<div class = "leftbox"><div class = centerbox><div class = fixation>+</div></div></div>' +
 	'<div class = "rightbox"><div class = centerbox><div class = fixation>+</div></div></div>',
 	on_finish: function(){
-		jsPsych.data.addDataToLastTrial({trial_id: 'practice_trial'})
+		jsPsych.data.addDataToLastTrial({
+			trial_id: 'practice_trial',
+			current_trial: current_trial})
 	}
 }
 
@@ -582,9 +584,9 @@ var test_block = {
 		if (data.key_press == data.correct_response) {
 			correct_trial = 1
 		}
-		
 		jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
-										 trial_id: 'test_trial'})
+										 trial_id: 'test_trial',
+										current_trial: current_trial})								 
 	}
 }
 

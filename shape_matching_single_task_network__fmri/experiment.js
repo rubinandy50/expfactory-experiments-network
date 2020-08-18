@@ -14,7 +14,7 @@ function getdesignEvents(design_num) {
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
-  }
+}
 
 function makeDesignTrialTypes(design_events) {
 	//['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN']

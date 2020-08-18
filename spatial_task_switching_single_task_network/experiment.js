@@ -203,7 +203,7 @@ var createTrialTypes = function(task_switches){
 		
 		stim = {
 			whichQuadrant: quadIndex,
-			predictable_condition: predictable_cond_array[i%2],
+			predictable_condition: predictable_cond_array[quadIndex - 1],
 			predictable_dimension: predictable_dimension,
 			number: number,
 			magnitude: response_arr[1],
@@ -223,6 +223,11 @@ var createTrialTypes = function(task_switches){
 
 
 var getFixation = function(){
+    return '<div class = centerbox><div class = fixation>+</div></div>'
+
+}
+
+var getCue = function(){
 	stim = stims.shift()
 	predictable_condition = stim.predictable_condition
 	predictable_dimension = stim.predictable_dimension
@@ -352,12 +357,30 @@ var prompt_text_list = '<ul style="text-align:left;">'+
 						'<li>'+predictable_dimensions_list[1].values[1]+': ' + possible_responses[1][0] + '</li>' +
 					  '</ul>'
 
-var prompt_text = '<div class = prompt_box>'+
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">Top 2 quadrants: Judge number on '+predictable_dimensions_list[0].dim+'</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">'+predictable_dimensions_list[0].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[0].values[1]+': ' + possible_responses[1][0] + '</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">Bottom 2 quadrants: Judge number on '+predictable_dimensions_list[1].dim+'</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">'+predictable_dimensions_list[1].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[1].values[1]+': ' + possible_responses[1][0] + '</p>' +
+// var prompt_text_list = '<div class = fixation>'+
+// 					  '<p class = center-block-text style = "font-size:16px;">Top 2 quadrants: Judge number on '+predictable_dimensions_list[0].dim+'</p>' +
+// 					  '<p class = center-block-text style = "font-size:16px;">'+predictable_dimensions_list[0].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[0].values[1]+': ' + possible_responses[1][0] + '</p>' +
+// 					  '<p>+</p>' +
+// 					  '<p class = center-block-text style = "font-size:16px;">Bottom 2 quadrants: Judge number on '+predictable_dimensions_list[1].dim+'</p>' +
+// 					  '<p class = center-block-text style = "font-size:16px;">'+predictable_dimensions_list[1].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[1].values[1]+': ' + possible_responses[1][0] + '</p>' +
+// 				  '</div>'
+
+var prompt_text = '<div class = fixation>'+
+					  '<p class = center-block-text style = "font-size:16px;">Top 2 quadrants: Judge number on '+predictable_dimensions_list[0].dim+'</p>' +
+					  '<p class = center-block-text style = "font-size:16px;">'+predictable_dimensions_list[0].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[0].values[1]+': ' + possible_responses[1][0] + '</p>' +
+					  '<p>+</p>' +
+					  '<p class = center-block-text style = "font-size:16px;">Bottom 2 quadrants: Judge number on '+predictable_dimensions_list[1].dim+'</p>' +
+					  '<p class = center-block-text style = "font-size:16px;">'+predictable_dimensions_list[1].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[1].values[1]+': ' + possible_responses[1][0] + '</p>' +
 				  '</div>'
+					//   '<div class = centerbox><div class = fixation>+</div></div>'
+// var prompt_text = '<div class = prompt_box>'+
+// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">Top 2 quadrants: Judge number on '+predictable_dimensions_list[0].dim+'</p>' +
+// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">'+predictable_dimensions_list[0].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[0].values[1]+': ' + possible_responses[1][0] + '</p>' +
+// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%;"><br> </p>' +
+// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%;"><br> </p>' +
+// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">Bottom 2 quadrants: Judge number on '+predictable_dimensions_list[1].dim+'</p>' +
+// 					  '<p class = center-block-text style = "font-size:16px; line-height:80%;">'+predictable_dimensions_list[1].values[0]+': ' + possible_responses[0][0] +  ' | ' + predictable_dimensions_list[1].values[1]+': ' + possible_responses[1][0] + '</p>' +
+// 				  '</div>'
 				  
 //PRE LOAD IMAGES HERE
 var pathSource = "/static/experiments/spatial_task_switching_single_task_network/images/"
@@ -441,11 +464,11 @@ var instructions_block = {
 	},
 	pages: [
 		'<div class = centerbox>'+
-			'<p class = block-text>In this experiment, across trials you will see a single number moving clockwise on the screen in 4 quadrants.'+
-			' On any trial, one quadrant will have a single number.</p> '+
+			'<p class = block-text>In this experiment, across trials you will see a single number within one of the four quadrants on the screen.'+
+			'  Based upon which quadrant the number is presented, you will complete a different task for that number.</p> '+
 		
 			'<p class = block-text>You will be asked to judge the number on magnitude (higher or lower than 5) or parity (odd or even), depending on which quadrant '+
-			'the number are in.</p>'+
+			'the number is in.</p>'+
 		
 			'<p class = block-text>In the top two quadrants, please judge the number based on <i>'+predictable_dimensions_list[0].dim+'</i>. Press the <i>'+possible_responses[0][0]+
 			'  if '+predictable_dimensions_list[0].values[0]+'</i>, and the <i>'+possible_responses[1][0]+'  if '+predictable_dimensions_list[0].values[1]+'</i>.</p>'+
@@ -558,6 +581,20 @@ for (i = 0; i < practice_len + 1; i++) {
 		timing_post_trial: 0,
 		prompt: prompt_text
 	}
+
+	var practice_cue_block = {
+		type: 'poldrack-single-stim',
+		stimulus: getCue,
+		is_html: true,
+		choices: 'none',
+		data: {
+		trial_id: 'practice_cue'
+		},
+		timing_response: 150, //getCTI
+		timing_stim: 150,  //getCTI
+		timing_post_trial: 0,
+		prompt: prompt_text
+	  };
 	
 	
 	var practice_block = {
@@ -567,9 +604,9 @@ for (i = 0; i < practice_len + 1; i++) {
 			"trial_id": "practice_trial"
 		},
 		key_answer: getResponse,
-		correct_text: '<div class = fb_box><div class = center-text><font size =20>Correct</font></div></div>' + prompt_text,
-		incorrect_text: '<div class = fb_box><div class = center-text><font size =20>Incorrect</font></div></div>' + prompt_text,
-		timeout_message: '<div class = fb_box><div class = center-text><font size =20>Respond Faster</font></div></div>' + prompt_text,
+		correct_text: '<div class = fb_box><div class = center-text><font size =20>Correct</font></div></div>' ,
+		incorrect_text: '<div class = fb_box><div class = center-text><font size =20>Incorrect</font></div></div>' ,
+		timeout_message: '<div class = fb_box><div class = center-text><font size =20>Respond Faster</font></div></div>',
 		show_stim_with_feedback: false,
 		is_html: true,
 		choices: [possible_responses[0][1],possible_responses[1][1]],
@@ -583,6 +620,7 @@ for (i = 0; i < practice_len + 1; i++) {
 	}
 	
 	practiceTrials.push(fixation_block)
+	practiceTrials.push(practice_cue_block)
 	practiceTrials.push(practice_block)
 }
 
@@ -630,7 +668,7 @@ var practiceNode = {
 			feedback_text +=
 					'</p><p class = block-text>Done with this practice. Press Enter to continue.' 
 			task_switches = makeTaskSwitches(numTrialsPerBlock)
-			stims = createTrialTypes(makeTaskSwitches(task_switches))
+			stims = createTrialTypes(task_switches)
 			return false
 	
 		} else if (accuracy < accuracy_thresh){
@@ -684,6 +722,20 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
 		timing_post_trial: 0
 	}
 	
+
+	var cue_block = {
+		type: 'poldrack-single-stim',
+		stimulus: getCue,
+		is_html: true,
+		choices: 'none',
+		data: {
+		trial_id: 'practice_cue'
+		},
+		timing_response: 150, //getCTI
+		timing_stim: 150,  //getCTI
+		timing_post_trial: 0
+	  };
+
 	var test_block = {
 		type: 'poldrack-single-stim',
 		stimulus: getStim,
@@ -699,6 +751,7 @@ for (i = 0; i < numTrialsPerBlock + 1; i++) {
 	}
 	
 	testTrials.push(fixation_block)
+	testTrials.push(cue_block)
 	testTrials.push(test_block)
 }
 

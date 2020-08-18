@@ -440,18 +440,6 @@ jsPsych.pluginAPI.preloadImages(images);
 var ITIs_stim = []
 var ITIs_resp = []
 
-//refresh feedback variables
-// var refresh_feedback_text = '<div class = instructbox>'+
-// '<p class = instruct-text>In this task, you will see a letter on every trial.</p>'+
-// '<p class = instruct-text>You will be asked to match the current letter to the letter that appeared either 1, 2, or 3 trials ago depending on the delay given to you for that block.</p>'+
-// '<p class = instruct-text><strong>Press your '+possible_responses[0][0]+' if the letters match, and your '+possible_responses[1][0]+' if they mismatch.</strong></p>'+
-// '<p class = instruct-text>Your delay (the number of trials ago which you must match the current letter to) will change from block to block. You will be given the delay at the start of every block of trials.</p>'+
-// '<p class = instruct-text>Capitalization does not matter, so "T" matches with "t".</p> '+
-// '<p class = instruct-text><strong><i>Your delay for this upcoming practice round is 1</i>.</strong></p> '+
-// '<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
-// '<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
-// '</div>'
-
 var refresh_trial_id = "instructions"
 var refresh_feedback_timing = -1
 var refresh_response_ends = true

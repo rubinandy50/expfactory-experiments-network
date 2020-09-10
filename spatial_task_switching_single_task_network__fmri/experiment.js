@@ -612,12 +612,12 @@ var feedback_block = {
 	data: {
 		trial_id: "feedback_block"
 	},
-	choices: [32],
+	choices: "none",
 	stimulus: getFeedback,
 	timing_post_trial: 0,
 	is_html: true,
-	timing_response: 180000,
-	response_ends_trial: true, 
+	timing_response: 10000,
+	response_ends_trial: false, 
 
 };
 
@@ -735,7 +735,7 @@ var refreshNode = {
 		var missed_responses = (total_trials - sum_responses) / total_trials
 		var ave_rt = sum_rt / sum_responses
 	
-		refresh_feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break! To let the experimenters know when you are ready to continue, please press any button."
+		refresh_feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break!"
 
 		if (accuracy < accuracy_thresh){
 			refresh_feedback_text +=
@@ -754,7 +754,7 @@ var refreshNode = {
 		}
 	
 		refresh_feedback_text +=
-			'</p><p class = instruct-text>Done with this practice. To let the experimenters know when you are ready to continue, please press any button.'
+			'</p><p class = instruct-text>Done with this practice. The test session will begin shortly.'
 		
 		
 		task_switches = des_task_switches.slice(0,numTrialsPerBlock) //GRAB NEWEST BLOCKS WORTH OF TRIALS

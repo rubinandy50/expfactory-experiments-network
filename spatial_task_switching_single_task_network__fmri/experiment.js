@@ -739,7 +739,7 @@ var refreshNode = {
 
 		if (accuracy < accuracy_thresh){
 			refresh_feedback_text +=
-					'</p><p class = instruct-text>Remember: <br>' + getPromptTextList()
+					'</p><p class = instruct-text> Remember: <br>' + getPromptTextList()
 		}
 			
 			

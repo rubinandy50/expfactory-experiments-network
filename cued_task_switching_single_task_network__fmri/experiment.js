@@ -441,8 +441,8 @@ var response_keys = {key: [[89,71],[89,71]], key_name: [["index finger","middle 
 var choices = response_keys.key
 var practice_length = 16 // must be divisible by 4
 var refresh_length = 8 //must be divisible by 4
-var exp_len = 208 //192 // must be divisible by 4
-var numTrialsPerBlock = 52 //48 
+var exp_len = 240 //192 // must be divisible by 4
+var numTrialsPerBlock = 60 //48 
 var numTestBlocks = exp_len / numTrialsPerBlock
 
 var practice_thresh = 3 // 3 blocks of 16 trials

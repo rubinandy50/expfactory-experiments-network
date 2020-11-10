@@ -145,9 +145,9 @@ function getInstructFeedback() {
 		'</p></div>'
 }
 
-function getRefreshFeedback() {
-	return '<div class = bigbox><div class = picture_box><p class = block-text>' + refresh_feedback_text + '</p></div></div>'
-}
+// function getRefreshFeedback() {
+// 	return '<div class = bigbox><div class = picture_box><p class = block-text>' + refresh_feedback_text + '</p></div></div>'
+// }
 
 function getFeedback() {
 	return '<div class = bigbox><div class = picture_box><p class = block-text>' + feedback_text + '</p></div></div>'
@@ -170,22 +170,17 @@ function getRefreshResponseEnds() {
 function getRefreshFeedback() {
 	if (getRefreshTrialID()=='instructions') {
 		return 	'<div class = centerbox>'+
-		'<p class = block-text>In this experiment, across trials you will see a single number within one of the four quadrants on the screen.'+
+		'<p class = instruct-text>In this experiment, across trials you will see a single number within one of the four quadrants on the screen.'+
 		'  Based upon which quadrant the number is presented, you will complete a different task for that number.</p> '+
-	
-		'<p class = block-text>You will be asked to judge the number on magnitude (higher or lower than 5) or parity (odd or even), depending on which quadrant '+
+		'<p class = instruct-text>You will be asked to judge the number on magnitude (higher or lower than 5) or parity (odd or even), depending on which quadrant '+
 		'the number is in.</p>'+
-	
-		'<p class = block-text>In the top two quadrants, please judge the number based on <i>'+predictable_dimensions_list[0].dim+'</i>. Press the <i>'+getPossibleResponses()[0][0][0]+
+		'<p class = instruct-text>In the top two quadrants, please judge the number based on <i>'+predictable_dimensions_list[0].dim+'</i>. Press the <i>'+getPossibleResponses()[0][0][0]+
 		'  if '+predictable_dimensions_list[0].values[0]+'</i>, and the <i>'+getPossibleResponses()[0][1][0]+'  if '+predictable_dimensions_list[0].values[1]+'</i>.</p>'+
-	
-		'<p class = block-text>In the bottom two quadrants, please judge the number based on <i>'+predictable_dimensions_list[1].dim+'.</i>'+
+		'<p class = instruct-text>In the bottom two quadrants, please judge the number based on <i>'+predictable_dimensions_list[1].dim+'.</i>'+
 		' Press the <i>'+getPossibleResponses()[1][0][0]+' if '+predictable_dimensions_list[1].values[0]+'</i>, and the <i>'+getPossibleResponses()[1][1][0]+
 		' if '+predictable_dimensions_list[1].values[1]+'</i>.</p>' +
-		
-		'<p class = block-text>We will start practice when you finish instructions. Please make sure you understand the instructions before moving on. During practice, you will receive a reminder of the rules.  <i>This reminder will be taken out for test</i>.</p>'+
-		'<p class = block-text>To avoid technical issues, please keep the experiment tab (on Chrome or Firefox) <i>active and in full-screen mode</i> for the whole duration of each task.</p>'+
-		'<p class = block-text>To let the experimenters know when you are ready to continue, please press any button.</p>' +
+		'<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
+		'<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
 		'</div>'
 	} else {
 		return '<div class = bigbox><div class = picture_box><p class = instruct-text><font color="white">' + refresh_feedback_text + '</font></p></div></div>'
@@ -860,20 +855,20 @@ var testNode0 = {
 		var ave_rt = sum_rt / sum_responses
 	
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! To let the experimenters know when you are ready to continue, please press any button."
-		feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
+					'</p><p class = instruct-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
 		}
 		if (missed_responses > missed_thresh){
 			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+					'</p><p class = instruct-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		}
 
       	if (ave_rt > rt_thresh){
         	feedback_text += 
-            	'</p><p class = block-text>You have been responding too slowly.'
+            	'</p><p class = instruct-text>You have been responding too slowly.'
       	}
 	
 		return false
@@ -972,25 +967,25 @@ var testNode = {
 		var ave_rt = sum_rt / sum_responses
 	
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! To let the experimenters know when you are ready to continue, please press any button."
-		feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
+					'</p><p class = instruct-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
 		}
 		if (missed_responses > missed_thresh){
 			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+					'</p><p class = instruct-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		}
 
       	if (ave_rt > rt_thresh){
         	feedback_text += 
-            	'</p><p class = block-text>You have been responding too slowly.'
+            	'</p><p class = instruct-text>You have been responding too slowly.'
       	}
 	
 		if (testCount == numTestBlocks){
 			feedback_text +=
-					'</p><p class = block-text>Done with this test. To let the experimenters know when you are ready to continue, please press any button.'
+					'</p><p class = instruct-text>Done with this test. To let the experimenters know when you are ready to continue, please press any button.'
 			return false
 		} else {
 		

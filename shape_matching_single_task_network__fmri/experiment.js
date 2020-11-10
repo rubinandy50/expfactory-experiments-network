@@ -791,7 +791,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
 	testTrials.push(test_block)
 }
 
-var testCount = 0
+// var testCount = 0
 var testNode = {
 	timeline: testTrials,
 	loop_function: function(data) {

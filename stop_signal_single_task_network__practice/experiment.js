@@ -42,14 +42,14 @@ function getPossibleResponses() {
 	if (getMotorPerm()==0) {
 		return possible_responses
 	} else if (getMotorPerm()==1) {
-		return [possible_responses[2], possible_responses[3], possible_responses[0], possible_responses[1]]
+		return [possible_responses[1], possible_responses[0]]
 	}
 }
 
 function getPromptTextList() {
 	return '<ul style="text-align:left;">'+
 	'<li>' + shapes[0] + ': ' + getPossibleResponses()[0][0] + '</li>' +
-	'<li>' + shapes[2] + ': ' + getPossibleResponses()[2][0] + '</li>' +
+	'<li>' + shapes[1] + ': ' + getPossibleResponses()[1][0] + '</li>' +
 	'<li>Do not respond if a star appears!</li>' +
   '</ul>'
 
@@ -58,7 +58,7 @@ function getPromptTextList() {
 function getPromptText() {
 	return '<div class = prompt_box>'+
 	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">' + shapes[0] + ': ' + getPossibleResponses()[0][0] + '</p>' +
-	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">' + shapes[2] + ': ' + getPossibleResponses()[2][0] + '</p>' +
+	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">' + shapes[1] + ': ' + getPossibleResponses()[1][0] + '</p>' +
 	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">Do not respond if a star appears!</p>' +
 '</div>'
 }
@@ -73,14 +73,14 @@ var getPracticeFeedback = function() {
 		'<p class = instruct-text>In this task, you will see shapes appear on the screen one at a time. </p>' +
 		'<p class = instruct-text>Only one response is correct for each shape.</p>'+
 		'<p class = instruct-text><strong>If the shape is a '+shapes[0]+', press your '+getPossibleResponses()[0][0]+'.</strong></p>'+
-		'<p class = instruct-text><strong>If the shape is a '+shapes[2]+', press your '+getPossibleResponses()[2][0]+'.</strong></p>'+
+		'<p class = instruct-text><strong>If the shape is a '+shapes[1]+', press your '+getPossibleResponses()[1][0]+'.</strong></p>'+
 		//'<p class = block-text>You should respond as quickly and accurately as possible to each shape.</p>'+
 		'<p class = instruct-text>On some trials, a star will appear around the shape.  The star will appear with, or shortly after the shape appears.</p>'+
 		'<p class = instruct-text><b>If you see a star appear, please try your best to withhold your response on that trial.</b></p>'+
 		'<p class = instruct-text>If the star appears on a trial, and you try your best to withhold your response, you will find that you will be able to stop sometimes but not always.</p>'+
 		'<p class = instruct-text>Please do not slow down your responses in order to wait for the star.  You should respond as quickly and accurately as possible to each shape.</p>'+
 		'<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
-		'<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
+		'<p class = instruct-text>When you are ready to begin, please press the spacebar. </p>'+
 		'</div>' + '</font></p></div></div>'
 
 	} else {
@@ -376,15 +376,15 @@ var minStopCorrectPractice = 0
 
 
 var stop_signal_conditions = ['go','go','stop']
-var shapes = ['circle','circle','square','square']
+var shapes = ['circle','square',]
 //'hourglass', 'Lshape', 'moon', 'oval', 'rectangle', 'rhombus', 'tear', 'trapezoid'
 var color = "black"
-var totalShapesUsed = 4
+var totalShapesUsed = 2
 
 
 // var possible_responses = [['index finger', 89], ['index finger', 89], ['middle finger', 71], ['middle finger', 71]] //fmri responses - keys: BYGRM = thumb->pinky
 
-var possible_responses = [['index finger', 37], ['index finger', 37], ['middle finger', 39], ['middle finger', 39]] //fmri responses - keys: BYGRM = thumb->pinky
+var possible_responses = [['index finger', 37], ['middle finger', 39]] //fmri responses - keys: BYGRM = thumb->pinky
 
 
 var postFileType = "'></img>"
@@ -606,7 +606,7 @@ for (i = 0; i < practice_len; i++) {
 			trial_id: "practice_trial",
 		},
 		is_html: true,
-		choices: [getPossibleResponses()[0][1], getPossibleResponses()[2][1]],
+		choices: [getPossibleResponses()[0][1], getPossibleResponses()[1][1]],
 		timing_stim: 1000, //1000
 		timing_response: 2000, //2000
 		response_ends_trial: false,

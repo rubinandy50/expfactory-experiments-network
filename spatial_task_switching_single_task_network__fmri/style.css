@@ -116,6 +116,60 @@ img.center {
   max-height: 65%;
 }
 
+/*MODIFIED FOR IN SCANNER PRESENTATIONS*/
+.upperbox {
+  width:35vw;
+  height: 20vw;
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%, -100%);
+}
+
+.instructbox {
+  width: 70vw;
+  height: 60vh;
+  position:absolute;
+  top:40%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+}
+
+.center-text {
+  text-align:center;
+  font-size: 85px;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.instruct-text {
+  width:100%;
+  text-align: left;
+  margin: 0 auto;
+  margin-bottom: 1em;
+  font-size: 38px;
+  line-height: 120%;
+  color: white;
+}
+
+ul {
+  list-style-type: none;
+  text-align: center;
+  display: inline-block;
+  font-size: 40px;
+  line-height: 120%;
+  margin-bottom: 1em;
+  color: white
+}
+/* ************************* */
+
+
 /*******************************************************/
 /************    Predictive CSS Styles     *************/
 /*******************************************************/

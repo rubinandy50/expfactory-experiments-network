@@ -446,8 +446,8 @@ var run_attention_checks = true
 
 
 var practice_len = 24 // 24 must be divisible by 12
-var exp_len = 216 //192 //=~8:40 //240 = ~10:50 //144 = original ~6:50 // must be divisible by 12 --- if 216, could do 72 numTrialsPerBlock
-var numTrialsPerBlock = 72 //48 // must be divisible by 12 
+var exp_len = 264 //192 //=~8:40 //240 = ~10:50 //144 = original ~6:50 // must be divisible by 12 --- if 216, could do 72 numTrialsPerBlock
+var numTrialsPerBlock = 66 //48 // must be divisible by 6 
 var numTestBlocks = exp_len / numTrialsPerBlock
 var practice_thresh = 3 // 3 blocks of 12 trials
 

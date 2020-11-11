@@ -440,8 +440,8 @@ var credit_var = 0
 // Set up variables for stimuli
 var practice_len =  16  //divisible by 4,  2 (switch or stay) by 2 (mag or parity)]
 var refresh_len =  8  //divisible by 4,  2 (switch or stay) by 2 (mag or parity)]
-var exp_len = 240 // must be divisible by 4
-var numTrialsPerBlock = 60; //  divisible by 4
+var exp_len = 192 // must be divisible by 4
+var numTrialsPerBlock = 48; //  divisible by 4
 var numTestBlocks = exp_len / numTrialsPerBlock
 
 

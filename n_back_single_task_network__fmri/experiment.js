@@ -394,8 +394,8 @@ var credit_var = 0
 
 
 var practice_len = 10 // must be divisible by 5
-var exp_len = 240 //150 // must be divisible by 5 --9:30
-var numTrialsPerBlock = 60 // must be divisible by 5 and we need to have a multiple of 2 blocks (2,4,6) in order to have equal delays across blocks
+var exp_len = 320 //150 // must be divisible by 5 --9:30
+var numTrialsPerBlock = 80 // must be divisible by 5 and we need to have a multiple of 2 blocks (2,4,6) in order to have equal delays across blocks
 var numTestBlocks = exp_len / numTrialsPerBlock //should be divisble by 2 ^^
 
 var accuracy_thresh = 0.75

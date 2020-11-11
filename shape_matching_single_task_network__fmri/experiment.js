@@ -299,8 +299,8 @@ var practice_len = 7 // must be divisible by 7
 // probe-target, target-distractor, distractor-probe of the form
 // SDS where "S" = match and "D" = non-match, N = "Neutral"
 var trial_types = jsPsych.randomization.repeat(['SSS', 'SDD', 'SNN', 'DSD', 'DDD', 'DDS', 'DNN'],practice_len/7)
-var exp_len = 224 //196 // originally 245
-var numTrialsPerBlock = 56 //49 //must be divisible by 7
+var exp_len = 168 //196 // originally 245
+var numTrialsPerBlock = 42 //49 //must be divisible by 7
 var numTestBlocks = exp_len / numTrialsPerBlock
 var choices = [89, 71]
 //var choices = [90, 77]

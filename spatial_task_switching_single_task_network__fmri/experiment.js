@@ -169,16 +169,14 @@ function getRefreshResponseEnds() {
 //feedback functions added for in-person version
 function getRefreshFeedback() {
 	if (getRefreshTrialID()=='instructions') {
-		return 	'<div class = centerbox>'+
-		'<p class = instruct-text>In this experiment, across trials you will see a single number within one of the four quadrants on the screen.'+
-		'  Based upon which quadrant the number is presented, you will complete a different task for that number.</p> '+
-		'<p class = instruct-text>You will be asked to judge the number on magnitude (higher or lower than 5) or parity (odd or even), depending on which quadrant '+
-		'the number is in.</p>'+
-		'<p class = instruct-text>In the top two quadrants, please judge the number based on <i>'+predictable_dimensions_list[0].dim+'</i>. Press the <i>'+getPossibleResponses()[0][0][0]+
-		'  if '+predictable_dimensions_list[0].values[0]+'</i>, and the <i>'+getPossibleResponses()[0][1][0]+'  if '+predictable_dimensions_list[0].values[1]+'</i>.</p>'+
-		'<p class = instruct-text>In the bottom two quadrants, please judge the number based on <i>'+predictable_dimensions_list[1].dim+'.</i>'+
-		' Press the <i>'+getPossibleResponses()[1][0][0]+' if '+predictable_dimensions_list[1].values[0]+'</i>, and the <i>'+getPossibleResponses()[1][1][0]+
-		' if '+predictable_dimensions_list[1].values[1]+'</i>.</p>' +
+		return 	'<div class = instructbox>'+
+		'<p class = instruct-text>In this experiment, across trials you will see a single number within one of the four quadrants on the screen, and will be asked to complete 1 of 2 tasks.'+
+		'You will be asked to judge the number on magnitude (higher or lower than 5) or parity (odd or even), depending on which quadrant the number is in.</p>'+
+		'<p class = instruct-text>In the top two quadrants, please judge the number based on <strong>'+predictable_dimensions_list[0].dim+'</strong>. Press the <strong>'+getPossibleResponses()[0][0][0]+
+		'  if '+predictable_dimensions_list[0].values[0]+'</strong>, and the <strong>'+getPossibleResponses()[0][1][0]+'  if '+predictable_dimensions_list[0].values[1]+'</strong>.</p>'+
+		'<p class = instruct-text>In the bottom two quadrants, please judge the number based on <strong>'+predictable_dimensions_list[1].dim+'.</strong>'+
+		' Press the <strong>'+getPossibleResponses()[1][0][0]+' if '+predictable_dimensions_list[1].values[0]+'</strong>, and the <strong>'+getPossibleResponses()[1][1][0]+
+		' if '+predictable_dimensions_list[1].values[1]+'</strong>.</p>' +
 		'<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
 		'<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
 		'</div>'
@@ -505,11 +503,11 @@ function getPromptTextList() {
 
 function getPromptText() {
 	return '<div class = fixation>'+
-	'<p class = center-block-text style = "font-size:16px;">Top 2 quadrants: Judge number on '+predictable_dimensions_list[0].dim+'</p>' +
-	'<p class = center-block-text style = "font-size:16px;">'+predictable_dimensions_list[0].values[0]+': ' + getPossibleResponses()[0][0][0] +  ' | ' + predictable_dimensions_list[0].values[1]+': ' + getPossibleResponses()[0][1][0] + '</p>' +
+	'<p class = center-block-text style = "font-size:24px;">Top 2 quadrants: Judge number on '+predictable_dimensions_list[0].dim+'</p>' +
+	'<p class = center-block-text style = "font-size:24px;">'+predictable_dimensions_list[0].values[0]+': ' + getPossibleResponses()[0][0][0] +  ' | ' + predictable_dimensions_list[0].values[1]+': ' + getPossibleResponses()[0][1][0] + '</p>' +
 	'<p>+</p>' +
-	'<p class = center-block-text style = "font-size:16px;">Bottom 2 quadrants: Judge number on '+predictable_dimensions_list[1].dim+'</p>' +
-	'<p class = center-block-text style = "font-size:16px;">'+predictable_dimensions_list[1].values[0]+': ' + getPossibleResponses()[1][0][0] +  ' | ' + predictable_dimensions_list[1].values[1]+': ' + getPossibleResponses()[1][1][0] + '</p>' +
+	'<p class = center-block-text style = "font-size:24px;">Bottom 2 quadrants: Judge number on '+predictable_dimensions_list[1].dim+'</p>' +
+	'<p class = center-block-text style = "font-size:24px;">'+predictable_dimensions_list[1].values[0]+': ' + getPossibleResponses()[1][0][0] +  ' | ' + predictable_dimensions_list[1].values[1]+': ' + getPossibleResponses()[1][1][0] + '</p>' +
 '</div>'
 }
 
@@ -730,7 +728,7 @@ var refreshNode = {
 		var missed_responses = (total_trials - sum_responses) / total_trials
 		var ave_rt = sum_rt / sum_responses
 	
-		refresh_feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break!"
+		refresh_feedback_text = "<div class = instructbox><p class = instruct-text>Please take this time to read your feedback and to take a short break!"
 
 		if (accuracy < accuracy_thresh){
 			refresh_feedback_text +=
@@ -854,7 +852,7 @@ var testNode0 = {
 		var missed_responses = (total_trials - sum_responses) / total_trials
 		var ave_rt = sum_rt / sum_responses
 	
-		feedback_text = "<br>Please take this time to read your feedback and to take a short break! To let the experimenters know when you are ready to continue, please press any button."
+		feedback_text = "<div class = instructbox><p class = instruct-text>Please take this time to read your feedback and to take a short break!"
 		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
 		if (accuracy < accuracy_thresh){
@@ -966,7 +964,7 @@ var testNode = {
 		var missed_responses = (total_trials - sum_responses) / total_trials
 		var ave_rt = sum_rt / sum_responses
 	
-		feedback_text = "<br>Please take this time to read your feedback and to take a short break! To let the experimenters know when you are ready to continue, please press any button."
+		feedback_text = "<div class = instructbox><p class = instruct-text>Please take this time to read your feedback and to take a short break!"
 		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
 		if (accuracy < accuracy_thresh){
@@ -1002,7 +1000,7 @@ spatial_task_switching_single_task_network__fmri_experiment = []
 
 spatial_task_switching_single_task_network__fmri_experiment.push(design_setup_block); //exp_input
 spatial_task_switching_single_task_network__fmri_experiment.push(motor_setup_block); //exp_input
-test_keys(spatial_task_switching_single_task_network__fmri_experiment, getChoices)
+test_keys(spatial_task_switching_single_task_network__fmri_experiment, [89, 71])
 
 spatial_task_switching_single_task_network__fmri_experiment.push(refreshNode)
 spatial_task_switching_single_task_network__fmri_experiment.push(refresh_feedback_block)

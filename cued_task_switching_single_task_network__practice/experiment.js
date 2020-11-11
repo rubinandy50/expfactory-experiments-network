@@ -98,7 +98,7 @@ var getPracticeFeedback = function() {
     '<p class = instruct-text>The cue before the number will be a word indicating the task. There will be four different cues indicating two different tasks. The cues and tasks are described below:</p>' +
     getTaskList() +
     '<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
-    '<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
+    '<p class = instruct-text>When you are ready to begin, please press the spacebar. </p>'+
     '</div>'
 
 	} else {

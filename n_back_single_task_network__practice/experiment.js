@@ -79,7 +79,7 @@ var getPracticeFeedback = function() {
 		'<p class = instruct-text>Capitalization does not matter, so "T" matches with "t".</p> '+
 		'<p class = instruct-text><strong><i>Your delay for this upcoming practice round is 1</i>.</strong></p> '+
 		'<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
-		'<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
+		'<p class = instruct-text>When you are ready to begin, please press the spacebar. </p>'+
 		'</div>'
 
 	} else {
@@ -678,11 +678,11 @@ var practiceNode1 = {
 	}
 }
 
-var practiceCount = 0
+var practiceCount2 = 0
 var practiceNode2 = {
 	timeline: practiceTrials,
 	loop_function: function(data) {
-		practiceCount += 1
+		practiceCount2 += 1
 		stims = createTrialTypes(practice_len, delay)
 		current_trial = 0
 	
@@ -743,7 +743,7 @@ var practiceNode2 = {
 						'</p><p class = instruct-text>Please do not simply press your "'+getPossibleResponses()[1][0]+'" to every stimulus. Please try to identify the matches and press your "'+getPossibleResponses()[0][0]+'" when they occur.'
 			}
 		
-			if (practiceCount == practice_thresh){
+			if (practiceCount2 == practice_thresh){
 				practice_feedback_text +=
 					'</p><p class = instruct-text>Done with this practice. The test session will begin shortly.' 
 					delay = delays.pop()

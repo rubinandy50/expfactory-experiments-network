@@ -20,9 +20,8 @@ function getdesignEvents(design_num) {
 var possible_responses = [['index finger', 89],['middle finger', 71]]
 
 function getTimeoutMessage() {
-	return '<div class = upperbox><div class = center-text>Respond Faster!</div></div>' +
-	getPromptTextList()
-  }
+	return  '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' 
+	+ getPromptTextList() }
 
 function getPossibleResponses() {
 	if (getMotorPerm()==0) {
@@ -185,11 +184,76 @@ var getRefreshResponseEnds = function() {
 	return refresh_response_ends
 }
 function getPromptTextList() {
-	return '<ul style="text-align:left;">'+
-	'<li>F: ' + correct_responses[1][0] + '</li>' +
-	'<li>H: ' + correct_responses[0][0] + '</li>' +
-  '</ul>'
+	return '<ul style="text-align:left;"><font color="white">'+
+	'<li>F: ' + getPossibleResponses()[1][0] + '</li>' +
+	'<li>H: ' + getPossibleResponses()[0][0] + '</li>' +
+  '</font></ul>'
 
+}
+
+function getCorrectResponse(center_letter) { 
+	if (center_letter == 'F') { 
+		correct_response = getPossibleResponses()[1][0] 
+	}
+	if (center_letter == 'H') { 
+		correct_response = getPossibleResponses()[1][0]
+	}
+	return correct_response
+	}
+
+function createTrials(numTrials) { 
+	test_stimuli = [{
+		image: flanker_boards[0]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[1]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[2]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[3]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[4]+ preFileType + 'F' + fileTypePNG,
+		data: {
+			flanker_condition: 'incongruent',
+			trial_id: 'stim',
+			flanker: 'F',
+			center_letter: 'H', 
+			correct_response: getCorrectResponse('F')
+		}
+	}, {
+		image: flanker_boards[0]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[1]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[2]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[3]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[4]+ preFileType + 'H' + fileTypePNG,
+		data: {
+			flanker_condition: 'incongruent',
+			trial_id: 'stim',
+			flanker: 'H',
+			center_letter: 'F'
+		}
+	}, {
+		image: flanker_boards[0]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[1]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[2]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[3]+ preFileType + 'H' + fileTypePNG +
+			   flanker_boards[4]+ preFileType + 'H' + fileTypePNG,
+		data: {
+			flanker_condition: 'congruent',
+			trial_id: 'stim',
+			flanker: 'H',
+			center_letter: 'H'
+		}
+	}, {
+		image: flanker_boards[0]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[1]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[2]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[3]+ preFileType + 'F' + fileTypePNG +
+			   flanker_boards[4]+ preFileType + 'F' + fileTypePNG,
+		data: {
+			flanker_condition: 'congruent',
+			trial_id: 'stim',
+			flanker: 'F',
+			center_letter: 'F'
+		}
+	}];
+	test_stimuli = jsPsych.randomization.repeat(test_stimuli, numTrials / 4, true);
+	return test_stimuli
 }
 	/* ************************************ */
 	/* Define experimental variables */
@@ -205,10 +269,10 @@ var missed_response_thresh = 0.10
 var practice_thresh = 3 // 3 blocks of 12 trials
 var choices = [71, 89]
 // task specific variables
-var correct_responses = jsPsych.randomization.repeat([
-	["middle finger", 71],
-	["index finger", 89]
-], 1)
+// var correct_responses = jsPsych.randomization.repeat([
+// 	["middle finger", 71],
+// 	["index finger", 89]
+// ], 1)
 
 
 
@@ -224,7 +288,6 @@ var test_stimuli = [{
 		   flanker_boards[3]+ preFileType + 'F' + fileTypePNG +
 		   flanker_boards[4]+ preFileType + 'F' + fileTypePNG,
 	data: {
-		correct_response: correct_responses[0][1],
 		flanker_condition: 'incongruent',
 		trial_id: 'stim',
 		flanker: 'F',
@@ -237,7 +300,6 @@ var test_stimuli = [{
 		   flanker_boards[3]+ preFileType + 'H' + fileTypePNG +
 		   flanker_boards[4]+ preFileType + 'H' + fileTypePNG,
 	data: {
-		correct_response: correct_responses[1][1],//70,
 		flanker_condition: 'incongruent',
 		trial_id: 'stim',
 		flanker: 'H',
@@ -250,7 +312,6 @@ var test_stimuli = [{
 		   flanker_boards[3]+ preFileType + 'H' + fileTypePNG +
 		   flanker_boards[4]+ preFileType + 'H' + fileTypePNG,
 	data: {
-		correct_response: correct_responses[0][1], //72,
 		flanker_condition: 'congruent',
 		trial_id: 'stim',
 		flanker: 'H',
@@ -263,7 +324,6 @@ var test_stimuli = [{
 		   flanker_boards[3]+ preFileType + 'F' + fileTypePNG +
 		   flanker_boards[4]+ preFileType + 'F' + fileTypePNG,
 	data: {
-		correct_response: correct_responses[1][1],
 		flanker_condition: 'congruent',
 		trial_id: 'stim',
 		flanker: 'F',
@@ -278,18 +338,19 @@ var exp_len = 192 // must be divisible by 4, 100 in original
 var numTrialsPerBlock = 48 //must be divisible by 4
 var numTestBlocks = exp_len / numTrialsPerBlock
 
-var practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
-var test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+//var practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
+// var practice_trials = [] 
+// var test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+// var practice_trials = createTrials(practice_len)
+// var practice_response_array = [];
+// for (i = 0; i < practice_trials.data.length; i++) {
+// 	practice_response_array.push(practice_trials.data[i].correct_response)
+// }
 
-var practice_response_array = [];
-for (i = 0; i < practice_trials.data.length; i++) {
-	practice_response_array.push(practice_trials.data[i].correct_response)
-}
-
-var test_response_array = [];
-for (i = 0; i < test_trials.data.length; i++) {
-	test_response_array.push(test_trials.data[i].correct_response)
-}
+// var test_response_array = [];
+// for (i = 0; i < test_trials.data.length; i++) {
+// 	test_response_array.push(test_trials.data[i].correct_response)
+// }
 
 				  
 //PRE LOAD IMAGES HERE
@@ -532,10 +593,13 @@ var motor_setup_block = {
 			"<p class = center-block-text>motor permutation (0-1):</p>"
 		]
 	], on_finish: function(data) {
-		motor_perm=parseInt(data.responses.slice(7, 10))		
+		motor_perm=parseInt(data.responses.slice(7, 10))
+		practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
+        test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+		
 	}
 }
-
+var practice_trials = createTrials(8)
 var practiceCount = 0
 var refreshTrials = []
 refreshTrials.push(refresh_feedback_block)
@@ -547,7 +611,7 @@ for (i = 0; i < practice_len; i++) {
 		key_answer: practice_response_array[i],
 		correct_text: '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>', 
 		incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>', 
-		timeout_message: getTimeoutMessage(), 
+		timeout_message: getTimeoutMessage, 
 		choices: [89, 71],
 		data: practice_trials.data[i],
 		timing_feedback_duration: 500, //500
@@ -567,7 +631,7 @@ for (i = 0; i < practice_len; i++) {
 			jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
 											 trial_id: 'practice_trial',
 											 current_block: current_block,
-											 current_trial: i
+											 current_trial: i,
 											 })
 		}
 	}

@@ -100,14 +100,14 @@ var getCategorizeFeedback = function(){
 	if (trial_id == 'refresh_trial'){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == jsPsych.data.getDataByTrialIndex(curr_trial).correct_response){
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptTaskList()
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' 
 		} else if ((jsPsych.data.getDataByTrialIndex(curr_trial).key_press != jsPsych.data.getDataByTrialIndex(curr_trial).correct_response) && (jsPsych.data.getDataByTrialIndex(curr_trial).key_press != -1)){
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + getPromptTaskList()
+			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' 
 	
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == -1){
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + getPromptTaskList()
+			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>'
 		}
 	}
 }
@@ -237,21 +237,22 @@ var getLettersHTML = function(){
 }
 
 var getCorrectResponse = function(probeType){
-	
 	if (probeType == 'pos') {
-		return choices[0]
+		return getPossibleResponses()[0][1]
 	} else if (probeType == 'neg') {
-		return choices[1]
+		return getPossibleResponses()[1][1]
 	} else if (probeType == 'con') {
-		return choices[1]
+		return getPossibleResponses()[1][1]
 	}
 }
+
 
 
 var resetTrial = function() {
 	current_trial = 0
 	exp_stage = 'test'
 }
+
 
 
 var createTrialTypes = function (numTrialsPerBlock,numLetters){
@@ -349,6 +350,45 @@ function getTimeoutMessage() {
 	getPromptTaskList()
   }
 
+  function getRefreshFeedback() {
+	if (exp_id='instructions') {
+		return 	'<div class = centerbox>'+
+		'<p class = block-text>In this experiment, on each trial you will be presented with '+
+		''+numLetters+' letters. You must memorize all '+numLetters+' letters. </p>'+
+	
+		'<p class = block-text>After the presentation of '+numLetters+' letters, there will be a short delay. You will then be presented with a cue, '+
+		'either <b>TOP</b> or <b>BOT</b>. This will instruct you to <b>forget</b> the '+
+		''+numLetters/2+' letters located at either the top or bottom (respectively) of the screen.</p>' + 
+		
+		'<p class = block-text>So if you get the cue <b>TOP</b>, please <b>forget</b> the top '+numLetters/2+' letters.</p>'+
+	
+		'<p class = block-text>'+
+			'The '+numLetters/2+' remaining letters that you must remember are called your <b>memory set</b>. You should remember '+
+			'these '+numLetters/2+' letters while forgetting the other '+numLetters/2+'.</p>'+
+
+		'<p class = block-text>You will then be presented with a single '+
+		'letter. Respond with your '+ getPossibleResponses()[0][0] + ' if it is in the memory set, and your ' + getPossibleResponses()[1][0]+
+		' if it was not in the memory set.</p>'+
+			
+		'<p class = block-text>We will start practice when you finish instructions. Please make sure you understand the instructions before moving on. During practice, you will receive a reminder of the rules.  <b>This reminder will be taken out for test</b>.</p>'+
+		'<p class = block-text> Please press any button to let the experimenters know when you are ready to begin practice. </p>' + 
+	'</div>'
+	} else {
+		return '<div class = bigbox><div class = picture_box><p class = instruct-text><font color="white">' + refresh_feedback_text + '</font></p></div></div>'
+	}
+}
+
+function getRefreshTrialID() {
+	return refresh_trial_id
+}
+
+function getRefreshFeedbackTiming() {
+	return refresh_feedback_timing
+}
+
+function getRefreshResponseEnds() {
+	return refresh_response_ends
+}
 
 /* ************************************ */
 /* Define experimental variables */
@@ -378,8 +418,7 @@ var numLetters = 4
 var cueArray = ['TOP', 'BOT']
 var probe = ''
 var cue = ''
-var stims = []
-var preceeding1stims = []
+//var preceeding1stims = []
 var preceeding2stims = []
 var probes = ['pos', 'pos', 'neg', 'con']
 var stimFix = ['fixation']
@@ -413,11 +452,14 @@ images.push(pathSource + 'BOT.png')
 images.push(pathSource + 'TOP.png')
 jsPsych.pluginAPI.preloadImages(images);
 
-var stims = createTrialTypes(refresh_length,numLetters)
 ITIs_stim = []
 ITIs_resp = [] 
 
-motor_perm = 0
+var refresh_trial_id = "instructions"
+var refresh_feedback_timing = -1
+var refresh_response_ends = true
+
+var motor_perm = 0
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
@@ -449,38 +491,24 @@ var feedback_instruct_block = {
 	timing_post_trial: 0,
 	timing_response: 180000
 };
-/// This ensures that the subject does not read through the instructions too quickly.  If they do it too quickly, then we will go over the loop again.
-var instructions_block = {
-	type: 'poldrack-instructions',
+
+var refresh_feedback_block = {
+	type: 'poldrack-single-stim',
 	data: {
-		trial_id: 'instruction'
+		trial_id: getRefreshTrialID
 	},
-	pages: [
-		'<div class = centerbox>'+
-			'<p class = block-text>In this experiment, on each trial you will be presented with '+
-			''+numLetters+' letters. You must memorize all '+numLetters+' letters. </p>'+
-		
-			'<p class = block-text>After the presentation of '+numLetters+' letters, there will be a short delay. You will then be presented with a cue, '+
-			'either <i>TOP</i> or <i>BOT</i>. This will instruct you to <i>forget</i> the '+
-			''+numLetters/2+' letters located at either the top or bottom (respectively) of the screen.</p>' + 
-			
-			'<p class = block-text>So if you get the cue <i>TOP</i>, please <i>forget</i> the top '+numLetters/2+' letters.</p>'+
-		
-			'<p class = block-text>'+
-				'The '+numLetters/2+' remaining letters that you must remember are called your <i>memory set</i>. You should remember '+
-				'these '+numLetters/2+' letters while forgetting the other '+numLetters/2+'.</p>'+
-	
-			'<p class = block-text>You will then be presented with a single '+
-			'letter. Respond with the '+ getPossibleResponses()[0][0] + 'key if it is in the memory set, and the ' + getPossibleResponses()[1][0]+
-			'key if it was not in the memory set.</p>'+
-				
-			'<p class = block-text>We will start practice when you finish instructions. Please make sure you understand the instructions before moving on. During practice, you will receive a reminder of the rules.  <i>This reminder will be taken out for test</i>.</p>'+
-			'<p class = block-text> Please press any button to let the experimenters know when you are ready to begin practice. </p>' + 
-		'</div>',
-	],
-	allow_keys: false,
-	show_clickable_nav: true,
-	timing_post_trial: 1000
+	choices: [32],
+	stimulus: getRefreshFeedback,
+	timing_post_trial: 0,
+	is_html: true,
+	timing_response: getRefreshFeedbackTiming, //10 seconds for feedback
+	timing_stim: getRefreshFeedbackTiming,
+	response_ends_trial: getRefreshResponseEnds,
+	on_finish: function() {
+		refresh_trial_id = "practice-no-stop-feedback"
+		refresh_feedback_timing = 10000
+		refresh_response_ends = false
+	} 
 };
 
 var design_setup_block = {
@@ -513,7 +541,9 @@ var motor_setup_block = {
 			"<p class = center-block-text>motor permutation (0-1):</p>"
 		]
 	], on_finish: function(data) {
-		motor_perm=parseInt(data.responses.slice(7, 10))		
+		motor_perm=parseInt(data.responses.slice(7, 10))
+		stims = createTrialTypes(refresh_length, numLetters)
+		
 	}
 }
 
@@ -924,7 +954,7 @@ var test_feedback_block = {
 // }
 
 var refreshTrials = []
-refreshTrials.push(instructions_block)
+refreshTrials.push(refresh_feedback_block)
 for (i = 0; i < (refresh_length); i++) {
 	var refresh_start_fixation_block = {
 		type: 'poldrack-single-stim',
@@ -1140,12 +1170,12 @@ var testNode0 = {
 			if (data[i].trial_id == 'test_trial') {
 				if(data[i].probe_type == 'neg'){
 					respond_remember_total += 1
-					if(data[i].key_press == getChoices()[0]){
+					if(data[i].key_press == getChoices()[1]){
 						neg_respond_remember += 1
 					}
 				}else if (data[i].probe_type == 'pos'){
 					respond_remember_total += 1
-					if(data[i].key_press == getChoices[1]){
+					if(data[i].key_press == getChoices[0]){
 						pos_respond_remember += 1
 					}
 				}
@@ -1239,12 +1269,12 @@ var testNode = {
 			if (data[i].trial_id == 'test_trial') {
 				if(data[i].probe_type == 'neg'){
 					respond_remember_total += 1
-					if(data[i].key_press == getChoices()[0]){
+					if(data[i].key_press == getChoices()[1]){
 						neg_respond_remember += 1
 					}
 				}else if (data[i].probe_type == 'pos'){
 					respond_remember_total += 1
-					if(data[i].key_press == getChoices()[1]){
+					if(data[i].key_press == getChoices()[0]){
 						pos_respond_remember += 1
 					}
 				}

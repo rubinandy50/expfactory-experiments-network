@@ -11,6 +11,32 @@ function getRefreshTrialID() {
 	return refresh_trial_id
 }
 
+// function updateTrialTypesWithDesigns(test_stimuli_options) { 
+// 	var new_stims = [] 
+// 	goTrials = [] 
+// 	nogoTrials = []
+// 	for (var idx = 0; idx < test_stimuli_options.length-1; idx++) { 
+// 		if (test_stimuli_options[idx].data['go_nogo_condition'] == 'go') { 
+// 			goTrials.push(test_stimuli_options[idx]) } 
+// 		if (test_stimuli_options[idx].data['go_nogo_condition'] == 'nogo') { 
+// 			 nogoTrials.push(test_stimuli_options[idx]) } 
+// 	curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
+// 	for (var idx = 0; idx < curr_des_events.length; idx++) {
+// 		nogo_condition = curr_des_events[idx]
+// 		if (nogo_condition == 'NoGo') {
+// 			stim = nogoTrials[Math.floor(Math.random() * nogoTrials.length)];
+
+// 		}
+// 		if (nogo_condition == 'Go')  { 
+// 			stim = goTrials[Math.floor(Math.random() * goTrials.length)];
+// 		 } 
+// 		new_stims.concat(stim)
+		
+// 	}
+// 	return new_stims
+// }
+// }
+
 function getRefreshFeedbackTiming() {
 	return refresh_feedback_timing
 }
@@ -37,7 +63,12 @@ function genITIs() {
 	return(iti_array)
 }
 
+function getGlobal() { 
+	correct_response = stim.correct_response
+	fixation = '<div class = centerbox><div class = fixation>+</div></div>'
+	return fixation
 
+}
 
 //added for motor counterbalancing
 function getMotorPerm() {
@@ -144,6 +175,7 @@ function assessPerformance() {
 									 final_accuracy: accuracy})
 }
 
+
 var get_response_time = function() {
   gap = 750 + Math.floor(Math.random() * 500) + 250
   return gap;
@@ -175,7 +207,7 @@ var getFeedback = function() {
   if (stim.key_answer == -1) {
     return '<div class = centerbox><div class = center-text>Correct!</div></div>' + prompt_text_list
   } else {
-    return '<div class = centerbox><div class = center-text>Incorrect!</div></p></div>'  + prompt_text_list
+    return '<div class = centerbox><div class = center-text>The shape was outlined!</div></p></div>'  + prompt_text_list
   }
 }
 
@@ -185,7 +217,7 @@ var getBlockFeedback = function() {
 
 
 var getInstructFeedback = function() {
-  return '<div class = centerbox><p class = center-block-text>' + feedback_instruct_text +
+  return '<div class = centerbox><p class = block-text>' + feedback_instruct_text +
     '</p></div>'
 }
 
@@ -201,9 +233,8 @@ var getData = function(){
 }
 
 var getCorrectResponse = function(){
-	return correct_response
+	return stim_data.correct_response
 }
-var correct_response = 0
 
 
 function genITIs() { 
@@ -236,13 +267,13 @@ function getITI_resp() { //added for fMRI compatibility
 	var currITI = ITIs_resp.shift()
 	if (currITI == 0.0) { //THIS IS JUST FOR CONVENIENCE BEFORE NEW DESIGNS ARE REGENERATED
 		currITI = 0.1
-	}
+	} 
 	return currITI
 }
 
 function getRefreshFeedback() { 
 	if (exp_id='instructions') {
-return '<div class = bigbox><div class = picture_box><p class = block-text>' + 
+return '<div class = bigbox><div class = center-box><p class = block-text>' + 
 	    'In this experiment, ' + stims[0][0] + ' and ' + stims[1][0] + ' squares will appear on the screen. '+
 	    'If you see the ' + stims[0][0] + ' square you should <b> respond by pressing your ' + getPossibleResponses()[0] +  ' as quickly as possible</b>. '+
 	    'If you see the ' + stims[1][0] + ' square you should <b> not respond</b>.</p>'+
@@ -250,7 +281,7 @@ return '<div class = bigbox><div class = picture_box><p class = block-text>' +
 		'<p class = block-text> Press any button when you are ready to begin </p></div></div>'} 
 
 		else {
-			return '<div class = bigbox><div class = picture_box><p class = instruct-text><font color="white">' + refresh_feedback_text + '</font></p></div></div>'
+			return '<div class = bigbox><div class = center-box><p class = instruct-text><font color="white">' + refresh_feedback_text + '</font></p></div></div>'
 
 		 }
   
@@ -290,7 +321,6 @@ var motor_setup_block = {
 	], on_finish: function(data) {
 		motor_perm=parseInt(data.responses.slice(7, 10))
 		block_stims = createPracticeTrials(practice_length) 
-		
 	}
 }
 practice_stimuli = []
@@ -374,7 +404,7 @@ var test_stimuli_block = [{
   stimulus: '<div class = bigbox><div class = centerbox><div class = gng_number><div class = cue-text><div id = ' + stims[1][1] + '></div></div></div></div></div>',
   data: {
     correct_response: getCorrectMapping()[1][1],
-    go_nogo_condition: correct_responses[1][0],
+    go_nogo_condition: getCorrectMapping()[1][0],
     trial_id: 'test_trial'
   }
 },{
@@ -422,20 +452,20 @@ var test_stimuli_block = [{
 }];
  	test_stimuli_block = jsPsych.randomization.repeat(test_stimuli_block, numTrialsPerBlock / test_stimuli_block.length);
 
- return test_stimuli_block 
+ return test_stimuli_block
 }
 
 var accuracy_thresh = 0.75
 var rt_thresh = 1000
 var missed_thresh = 0.10
 
-var refresh_len = 4
+var refresh_len = 6
 practice_len = 1
 var practice_thresh = 1
 var refresh_thresh = 1
 
 
-var exp_len = 126 //multiple of numTrialsPerBlock
+var exp_len = 252 //multiple of numTrialsPerBlock
 var numTrialsPerBlock = 63 // multiple of 7 (6go:1nogo)
 var numTestBlocks = exp_len / numTrialsPerBlock
 
@@ -449,8 +479,8 @@ var ITIs_resp = []
 
 
 var prompt_text_list = '<ul style="text-align:left;"><font color="white">'+
-						'<li>'+stims[0][0]+' square: Respond</li>' +
-						'<li>'+stims[1][0]+' square: Do not respond</li>' +
+						'<li>'+stims[0][0]+' square: respond</li>' +
+						'<li>'+stims[1][0]+' square: do not respond</li>' +
 					  '</font></ul>'
 
 /* ************************************ */
@@ -502,8 +532,8 @@ var feedback_instruct_block = {
 //   simulus: 
 //     '<div class = centerbox>'+
 // 	    '<p class = block-text>In this experiment, ' + stims[0][0] + ' and ' + stims[1][0] + ' squares will appear on the screen. '+
-// 	    'If you see the ' + stims[0][0] + ' square you should <i> respond by pressing the spacebar as quickly as possible</i>. '+
-// 	    'If you see the ' + stims[1][0] + ' square you should <i> not respond</i>.</p>'+
+// 	    'If you see the ' + stims[0][0] + ' square you should <b> respond by pressing the spacebar as quickly as possible</i>. '+
+// 	    'If you see the ' + stims[1][0] + ' square you should <b> not respond</i>.</p>'+
 // 	    '<p class = block-text>We will begin with practice. You will receive feedback telling you if you were correct.</p>'+
 // 		'<p class = block-text> Press any button when you are ready to begin </p>' +	'</div>'
 //   ,
@@ -524,7 +554,7 @@ var feedback_instruct_block = {
 //     }
 //     if (sumInstructTime <= instructTimeThresh * 1000) {
 //       feedback_instruct_text =
-//         'Read through instructions too quickly.  Please take your time and make sure you understand the instructions.  Press <i>enter</i> to continue.'
+//         'Read through instructions too quickly.  Please take your time and make sure you understand the instructions.  Press <b>enter</i> to continue.'
 //       return true
 //     } else if (sumInstructTime > instructTimeThresh * 1000) {
 //       feedback_instruct_text =
@@ -559,7 +589,7 @@ var end_block = {
 	  trial_id: "end",
 	},
 	text: '<div class = centerbox><p class = center-block-text>Thanks for completing this task!</p>'+'</div>',
-	cont_key: [13],
+	cont_key: [32],
 	timing_post_trial: 0,
 	on_finish: function(){
 		  assessPerformance()	  
@@ -573,7 +603,7 @@ var start_test_block = {
     trial_id: "test_intro"
   },
   text: '<div class = centerbox><p class = block-text>Practice is over, we will now begin the experiment. You will no longer receive feedback about your responses.</p>'+
-  '<p class = block-text>Remember, if you see the ' + stims[0][0] + ' square you should <i> respond by pressing the spacebar as quickly as possible</i>. '+
+  '<p class = block-text>Remember, if you see the ' + stims[0][0] + ' square you should <b> respond by pressing the spacebar as quickly as possible</i>. '+
   'If you see the ' + stims[1][0] + ' square you should <i> not respond</i>.',
   cont_key: [13],
   timing_post_trial: 1000,
@@ -754,6 +784,21 @@ var refreshTrials = []
 refreshTrials.push(refresh_feedback_block)
 for (var i = 0; i < refresh_len; i ++){
 
+	var update_global_fixation = {
+			type: 'poldrack-single-stim',
+			stimulus: getGlobal, 
+			is_html: true,
+			choices: 'none',
+			data: {
+				trial_id: "update_correct_response",
+			},
+			timing_post_trial: 0,
+			timing_stim: 1,
+			timing_response: 1,
+			prompt: prompt_text_list
+		};
+
+
 	var refresh_block = {
 	  type: 'poldrack-categorize',
 	  stimulus: getStim,
@@ -761,7 +806,7 @@ for (var i = 0; i < refresh_len; i ++){
 	  data: getData,
 	  key_answer: getCorrectResponse,
 	  correct_text: '<div class = centerbox><div class = center-text>Correct!</div></div>',
-	  incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>Incorrect!</font></div></div>', 
+	  incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>The shape was outlined!</font></div></div>', 
 	  timeout_message: getFeedback,
 	  choices: getKey,
 	  timing_response: 2000, //2000
@@ -783,7 +828,7 @@ var refreshNode = {
 	timeline: refreshTrials,
 	loop_function: function(data){
 		refreshCount += 1
-		current_trial = 0	
+		current_trial = 0
 		var sum_rt = 0
 		var sum_responses = 0
 		var correct = 0
@@ -792,7 +837,12 @@ var refreshNode = {
 		var total_go_trials = 0
 		var missed_response = 0
 		block_stims = getTestStimuli(numTrialsPerBlock)
-
+	
+		//block_stims = updateTrialTypesWithDesigns(test_stimuli_options)
+				// current_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		// des_events = des_events.slice(numTrialsPerBlock,)
+		// block_stims = updateTrialTypesWithDesigns(stims, current_block_des_events)
+		
 		for (var i = 0; i < data.length; i++){
 			if (data[i].trial_id == "practice_trial"){
 				total_trials+=1
@@ -822,8 +872,7 @@ var refreshNode = {
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! "
 
 		if (accuracy > accuracy_thresh){
-			feedback_text +=
-					'</p><p class = block-text>Done with this practice.' 
+			return false
 	
 		} else if (accuracy < accuracy_thresh){
 			feedback_text +=
@@ -833,20 +882,9 @@ var refreshNode = {
 				feedback_text +=
 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 			}
-
-	      	if (ave_rt > rt_thresh){
-	        	feedback_text += 
-	            	'</p><p class = block-text>You have been responding too slowly.'
-	      	}
 		
-			if (refreshCount == refresh_thresh){
-				feedback_text +=
-					'</p><p class = block-text>Done with this practice.'
 
-					return false
-			}
-
-			return true
+		return false
 		
 		}
 	
@@ -882,7 +920,7 @@ var testNode0 = {
 	loop_function: function(data){
 		testCount += 1
 		current_trial = 0
-	
+		
 		var sum_rt = 0
 		var sum_responses = 0
 		var correct = 0
@@ -915,14 +953,17 @@ var testNode0 = {
 		var missed_responses = missed_response / total_go_trials
 		var ave_rt = sum_rt / sum_responses
 	
-		feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
+		feedback_text = "<br>Done with this test. Please take this time to read your feedback and to take a short break! Press enter to continue"
 		feedback_text += "</p><p class = block-text>You have completed " +testCount+ " out of " +numTestBlocks+ " blocks of trials."
 
+		// if (testCount >= numTestBlocks){
 			
-			feedback_text +=
-					'If you have been completing tasks continuously for an hour or more, please take a 15-minute break before starting again.' 
+		// 	feedback_text +=
+		// 			'</p><p class = block-text>Done with this test. Press Enter to continue.<br> '+
+		// 			'If you have been completing tasks continuously for an hour or more, please take a 15-minute break before starting again.' 
+		// 	return false
 	
-		
+		// } else {
 		if (accuracy < accuracy_thresh){
 		feedback_text +=
 				'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text_list
@@ -939,16 +980,18 @@ var testNode0 = {
 					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		}
 	
+		//test_stimuli_options = getTestStimuli()
+	
+		block_stims = getTestStimuli(numTrialsPerBlock)
 		
-			block_stims = getTestStimuli(numTrialsPerBlock)
-			trial_id = 'test_trial'		
-			return false
-
+		trial_id = 'test_trial'
+		return false
+		
+		// }
 	
 	}
 	
 }
-
 
 var testTrials = []
 testTrials.push(feedback_block)
@@ -1035,7 +1078,7 @@ var testNode = {
 				feedback_text +=
 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 			}
-			block_stims = getTestStimuli(numTrialsPerBlock);
+			block_stims = getTestStimuli(numTrialsPerBlock)
 			return true
 		
 		}

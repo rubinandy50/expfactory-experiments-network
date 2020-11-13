@@ -1283,7 +1283,8 @@ var testNode = {
 	timeline: testTrials,
 	loop_function: function(data) {
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		
+		testCount += 1
+
 		//below are counters to see if the subject is treating this task as a directed remembering as opposed to a directed forgetting task
 		var respond_remember_total = 0
 		var neg_respond_remember = 0
@@ -1310,7 +1311,6 @@ var testNode = {
 		var directed_remembering_total = neg_respond_remember + pos_respond_remember
 		var directed_remembering_percent = directed_remembering_total / respond_remember_total 
 
-		console.log(directed_remembering_percent)
 		if (directed_remembering_percent >= 0.75){
 			test_feedback_text = 'According to the pattern of your responses, we believe that you are treating this task as a directed remembering task.  Please remember that <i>this is a directed forgetting task</i>.</p>'+
 								 '<p class = block-text>When you are presented with the cue TOP, you should <i> forget the top letters</i> and <i>remember the bottom letters.</i></p>'+
@@ -1364,7 +1364,7 @@ var testNode = {
 
 			if (testCount == numTestBlocks){
 				test_feedback_text +=
-						'</p><p class = block-text>Done with this test.s'
+						'</p><p class = block-text>Done with this test.'
 				return false
 			}
 		

@@ -113,6 +113,17 @@ ul {
  font-size: 48px;
 }
 
+
+.centerbox {
+  width: 50vw;
+  height: 60vh;
+  position:absolute;
+  top:40%;
+  left:50%;
+  margin-right:-50%;
+  transform: translate(-50%,-50%);
+}
+
 .prompt_box {
  width: 75%;
  height: 20%;

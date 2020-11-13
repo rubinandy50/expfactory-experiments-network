@@ -1,6 +1,6 @@
 [
     {
-        "name": "Directed Forgetting Single Task Network fMRI",
+        "name": "Directed Forgetting Single Task Network Practice",
         "template":"jspsych",
         "run": [
                  "static/js/math.min.js",
@@ -20,7 +20,7 @@
                  "static/css/default_style.css",
                  "style.css"
                ],
-        "exp_id": "directed_forgetting_single_task_network__fmri",
+        "exp_id": "directed_forgetting_single_task_network__practice",
         "cognitive_atlas_task_id": "trm_56674c7c2fa4f",
         "contributors": [
                          "Patrick Bissett",
@@ -40,7 +40,7 @@
         "deployment_variables":{"jspsych_init":
                                         {"fullscreen": true,
                                         "display_element": "getDisplayElement",
-                                        "on_trial_finish": "addID('directed_forgetting_single_task_network')"}
+                                        "on_trial_finish": "addID('directed_forgetting_single_task_network__practice')"}
                        }
     
    }

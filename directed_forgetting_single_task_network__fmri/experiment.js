@@ -5,18 +5,6 @@ function addID() {
   jsPsych.data.addDataToLastTrial({exp_id: 'directed_forgetting_single_task_network__fmri'})
 }
 
-
-var updateTrialTypesWithDesigns = function(stims, design_events){
-	var new_stims = []
-	for (var i = 0; i < design_events.length; i++) {
-		var curr_stim = {
-			stim: stims[i].stim,
-			correct_response: stims[i].correct_response,		}
-		new_stims.push(curr_stim)
-	}
-	return new_stims
-}
-
 //added for motor counterbalancing
 function getMotorPerm() {
 	return motor_perm
@@ -237,7 +225,6 @@ var getLettersHTML = function(){
 	probe = stim.probe
 	correct_response = stim.correct_response
 	
-	
 	return task_boards[0]+ preFileType + letters[0] + fileTypePNG +
 		   task_boards[1]+
 		   task_boards[2]+ preFileType + letters[1] + fileTypePNG +
@@ -271,7 +258,8 @@ var createTrialTypes = function (numTrialsPerBlock,numLetters){
 	var used_letters = []
 	var stims = []
 	
-	for (var i = 0; i < numTrialsPerBlock; i++){
+	if (numTrialsPerBlock == refresh_length) {
+	 for (var i = 0; i < numTrialsPerBlock; i++){
 		var directed_forgetting_condition = probeTypeArray.pop()
 		var letters = getTrainingSet(used_letters,numLetters)
 		var cue = getCue()
@@ -289,6 +277,30 @@ var createTrialTypes = function (numTrialsPerBlock,numLetters){
 		
 		used_letters = used_letters.concat(letters)	
 	}	
+} else { 
+	curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
+	des_events = des_events.slice(numTrialsPerBlock,)
+	for (var i = 0; i < numTrialsPerBlock; i++){
+		var directed_forgetting_condition = des_events[i]
+		var letters = getTrainingSet(used_letters,numLetters)
+		var cue = getCue()
+		var probe = getProbe(letters,directed_forgetting_condition,cue)
+		var correct_response = getCorrectResponse(directed_forgetting_condition)
+		
+		stim = {
+			directed_forgetting_condition:directed_forgetting_condition,
+			letters: letters,
+			cue: cue,
+			probe: probe,
+			correct_response: correct_response
+			}
+		stims.push(stim)
+		
+		used_letters = used_letters.concat(letters)	
+	}	
+}
+		
+		
 	return stims	
 }
 
@@ -414,7 +426,7 @@ var credit_var = 0
 var choices = [89, 71]
 var exp_stage = 'practice'
 var refresh_length = 4 
-var numTrialsPerBlock = 32
+var numTrialsPerBlock = 40
 var numTestBlocks = 3
 var practice_thresh = 3 // 3 blocks of 8 trials
 var accuracy_thresh = 0.75
@@ -1088,11 +1100,10 @@ var refreshNode = {
 	timeline: refreshTrials,
 	loop_function: function(data){
 		refreshCount += 1
-		stims = createTrialTypes(refresh_length,numLetters)
-		stims = createTrialTypes(numTrialsPerBlock)
-		first_block_des_events = des_events.slice(0,numTrialsPerBlock)
-		des_events = des_events.slice(numTrialsPerBlock,)
-		stims = updateTrialTypesWithDesigns(stims, first_block_des_events)
+		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+		// first_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		// des_events = des_events.slice(numTrialsPerBlock,)
+		// stims = updateTrialTypesWithDesigns(stims, first_block_des_events)
 		
 		var sum_rt = 0
 		var sum_responses = 0
@@ -1172,9 +1183,7 @@ var testNode0 = {
 	timeline: testTrials0,
 	loop_function: function(data) {
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		curr_block_des_events = des_events.slice(0,numTrialsPerBlock)
-		des_events = des_events.slice(numTrialsPerBlock,)
-		stims = updateTrialTypesWithDesigns(stims, curr_block_des_events)
+
 		testCount += 1
 		current_trial = 0 
 		
@@ -1274,12 +1283,6 @@ var testNode = {
 	timeline: testTrials,
 	loop_function: function(data) {
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		curr_block_des_events = des_events.slice(0,numTrialsPerBlock)
-		des_events = des_events.slice(numTrialsPerBlock,)
-		stims = updateTrialTypesWithDesigns(stims, curr_block_des_events)
-		testCount += 1
-		current_trial = 0 
 		
 		//below are counters to see if the subject is treating this task as a directed remembering as opposed to a directed forgetting task
 		var respond_remember_total = 0

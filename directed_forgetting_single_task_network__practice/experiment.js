@@ -2,7 +2,7 @@
 /* Define helper functions */
 /* ************************************ */
 function addID() {
-  jsPsych.data.addDataToLastTrial({exp_id: 'directed_forgetting_single_task_network__fmri'})
+  jsPsych.data.addDataToLastTrial({exp_id: 'directed_forgetting_single_task_network__practice'})
 }
 
 var motor_perm = 0
@@ -382,7 +382,6 @@ var credit_var = 0
 // task specific variables
 var choices = [37, 39]
 var exp_stage = 'practice'
-var refresh_length = 4 
 var practice_length = 24
 var numTrialsPerBlock = 32
 var numTestBlocks = 3
@@ -404,10 +403,10 @@ var preceeding1stims = []
 var preceeding2stims = []
 var probes = ['pos', 'pos', 'neg', 'con']
 var stimFix = ['fixation']
-var pathSource = '/static/experiments/directed_forgetting_single_task_network__fmri/images/'
+var pathSource = '/static/experiments/directed_forgetting_single_task_network__practice/images/'
 var fileType = '.png'
 var fileTypePNG = ".png'></img>"
-var preFileType = "<img class = center src='/static/experiments/directed_forgetting_single_task_network__fmri/images/"
+var preFileType = "<img class = center src='/static/experiments/directed_forgetting_single_task_network__practice/images/"
 
 
 var task_boards = [['<div class = bigbox><div class = topLeft><div class = cue-text>'],['</div></div><div class = topMiddle><div class = cue-text>'],['</div></div><div class = topRight><div class = cue-text>'],['</div></div><div class = bottomLeft><div class = cue-text>'],['</div></div><div class = bottomMiddle><div class = cue-text>'],['</div></div><div class = bottomRight><div class = cue-text>'],['</div></div></div>']]
@@ -422,8 +421,8 @@ var prompt_text = '<div class = prompt_box>'+
 				  
 				  
 //PRE LOAD IMAGES HERE
-var pathSource = "/static/experiments/directed_forgetting_single_task_network__fmri/images/"
-var pathDesignSource = "/static/experiments/directed_forgetting_single_task_network__fmri/designs/" //ADDED FOR fMRI SEQUENCES
+var pathSource = "/static/experiments/directed_forgetting_single_task_network_practice/images/"
+var pathDesignSource = "/static/experiments/directed_forgetting_single_task_network__practice/designs/" //ADDED FOR fMRI SEQUENCES
 
 var images = []
 
@@ -945,410 +944,410 @@ var practiceNode = {
 	
 }
 
-var refreshTrials = []
-refreshTrials.push(instructions_block)
-for (i = 0; i < (refresh_length); i++) {
-	var refresh_start_fixation_block = {
-		type: 'poldrack-single-stim',
-		stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
-		is_html: true,
-		choices: 'none',
-		data: {
-			trial_id: "refresh_fixation"
-		},
-		timing_post_trial: 0,
-		timing_stim: 500, //500
-		timing_response: 500, //500
-		prompt: getPromptTaskList,
-		on_finish: function() {
-			jsPsych.data.addDataToLastTrial({
-				exp_stage: exp_stage,
-				current_trial: current_trial
-			})
-		}
-	}
+// var refreshTrials = []
+// refreshTrials.push(instructions_block)
+// for (i = 0; i < (refresh_length); i++) {
+// 	var refresh_start_fixation_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
+// 		is_html: true,
+// 		choices: 'none',
+// 		data: {
+// 			trial_id: "refresh_fixation"
+// 		},
+// 		timing_post_trial: 0,
+// 		timing_stim: 500, //500
+// 		timing_response: 500, //500
+// 		prompt: getPromptTaskList,
+// 		on_finish: function() {
+// 			jsPsych.data.addDataToLastTrial({
+// 				exp_stage: exp_stage,
+// 				current_trial: current_trial
+// 			})
+// 		}
+// 	}
 
-	var refresh_fixation_block = {
-		type: 'poldrack-single-stim',
-		stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
-		is_html: true,
-		choices: 'none',
-		data: {
-			trial_id: "refresh_fixation"
-		},
-		timing_post_trial: 0,
-		timing_stim: 2000, //2000
-		prompt: getPromptTaskList,
-		timing_response: 2000, //2000
-		on_finish: function() {
-			jsPsych.data.addDataToLastTrial({
-				exp_stage: exp_stage,
-				current_trial: current_trial
-			})
-		}
-	}
+// 	var refresh_fixation_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
+// 		is_html: true,
+// 		choices: 'none',
+// 		data: {
+// 			trial_id: "refresh_fixation"
+// 		},
+// 		timing_post_trial: 0,
+// 		timing_stim: 2000, //2000
+// 		prompt: getPromptTaskList,
+// 		timing_response: 2000, //2000
+// 		on_finish: function() {
+// 			jsPsych.data.addDataToLastTrial({
+// 				exp_stage: exp_stage,
+// 				current_trial: current_trial
+// 			})
+// 		}
+// 	}
 
-	var refresh_ITI_fixation_block = {
-		type: 'poldrack-single-stim',
-		is_html: true,
-		choices: 'none',
-		data: {
-			trial_id: "refresh_ITI_fixation"
-		},
-		timing_post_trial: 0,
-		timing_stim: 1000, //1000
-		prompt: getPromptTaskList,
-		timing_response: 1000, //1000
-		on_finish: function() {
-			jsPsych.data.addDataToLastTrial({
-				exp_stage: exp_stage,
-				current_trial: current_trial
-			})
-			current_trial = current_trial + 1
-		}
-	}
+// 	var refresh_ITI_fixation_block = {
+// 		type: 'poldrack-single-stim',
+// 		is_html: true,
+// 		choices: 'none',
+// 		data: {
+// 			trial_id: "refresh_ITI_fixation"
+// 		},
+// 		timing_post_trial: 0,
+// 		timing_stim: 1000, //1000
+// 		prompt: getPromptTaskList,
+// 		timing_response: 1000, //1000
+// 		on_finish: function() {
+// 			jsPsych.data.addDataToLastTrial({
+// 				exp_stage: exp_stage,
+// 				current_trial: current_trial
+// 			})
+// 			current_trial = current_trial + 1
+// 		}
+// 	}
 
-	var refresh_training_block = {
-		type: 'poldrack-single-stim',
-		stimulus: getLettersHTML,
-		is_html: true,
-		data: {
-			trial_id: "refresh_stim"
-		},
-		choices: 'none',
-		prompt: getPromptTaskList,
-		timing_post_trial: 0,
-		timing_stim: 2000, //2000
-		timing_response: 2000 //2000
-	};
+// 	var refresh_training_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: getLettersHTML,
+// 		is_html: true,
+// 		data: {
+// 			trial_id: "refresh_stim"
+// 		},
+// 		choices: 'none',
+// 		prompt: getPromptTaskList,
+// 		timing_post_trial: 0,
+// 		timing_stim: 2000, //2000
+// 		timing_response: 2000 //2000
+// 	};
 
 
 
-	var refresh_cue_block = {
-		type: 'poldrack-single-stim',
-		stimulus: getCueHTML,
-		is_html: true,
-		data: {
-			trial_id: "refresh_cue",
-		},
-		choices: 'none',
-		prompt: getPromptTaskList,
-		timing_post_trial: 0,
-		timing_stim: 1000, //1000
-		timing_response: 1000 //1000
-	};
+// 	var refresh_cue_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: getCueHTML,
+// 		is_html: true,
+// 		data: {
+// 			trial_id: "refresh_cue",
+// 		},
+// 		choices: 'none',
+// 		prompt: getPromptTaskList,
+// 		timing_post_trial: 0,
+// 		timing_stim: 1000, //1000
+// 		timing_response: 1000 //1000
+// 	};
 	
-	var categorize_block = {
-		type: 'poldrack-single-stim',
-		data: {
-			trial_id: "refresh-stop-feedback"
-		},
-		choices: 'none',
-		stimulus: getCategorizeFeedback,
-		timing_post_trial: 0,
-		is_html: true,
-		timing_stim: 500, //500
-		timing_response: 500, //500
-		promot: getPromptTaskList,
-		response_ends_trial: false, 
+// 	var categorize_block = {
+// 		type: 'poldrack-single-stim',
+// 		data: {
+// 			trial_id: "refresh-stop-feedback"
+// 		},
+// 		choices: 'none',
+// 		stimulus: getCategorizeFeedback,
+// 		timing_post_trial: 0,
+// 		is_html: true,
+// 		timing_stim: 500, //500
+// 		timing_response: 500, //500
+// 		promot: getPromptTaskList,
+// 		response_ends_trial: false, 
 
-	};
+// 	};
 	
-	refreshTrials.push(refresh_start_fixation_block);
-	refreshTrials.push(refresh_training_block);
-	refreshTrials.push(refresh_cue_block);
-	refreshTrials.push(refresh_fixation_block);
-	refreshTrials.push(refresh_probe_block);
-	refreshTrials.push(refresh_ITI_fixation_block);
-	refreshTrials.push(categorize_block);
-}
+// 	refreshTrials.push(refresh_start_fixation_block);
+// 	refreshTrials.push(refresh_training_block);
+// 	refreshTrials.push(refresh_cue_block);
+// 	refreshTrials.push(refresh_fixation_block);
+// 	refreshTrials.push(refresh_probe_block);
+// 	refreshTrials.push(refresh_ITI_fixation_block);
+// 	refreshTrials.push(categorize_block);
+// }
 
 
-var refreshCount = 0
-var refreshNode = {
-	timeline: refreshTrials,
-	loop_function: function(data){
-		refreshCount += 1
-		stims = createTrialTypes(refresh_length,numLetters)
+// var refreshCount = 0
+// var refreshNode = {
+// 	timeline: refreshTrials,
+// 	loop_function: function(data){
+// 		refreshCount += 1
+// 		stims = createTrialTypes(refresh_length,numLetters)
 	
-		var sum_rt = 0
-		var sum_responses = 0
-		var correct = 0
-		var total_trials = 0
+// 		var sum_rt = 0
+// 		var sum_responses = 0
+// 		var correct = 0
+// 		var total_trials = 0
 	
-		for (var i = 0; i < data.length; i++){
-			if (data[i].trial_id == 'refresh_trial'){
-				total_trials+=1
-				if (data[i].rt != -1){
-					sum_rt += data[i].rt
-					sum_responses += 1
-					if (data[i].key_press == data[i].correct_response){
-						correct += 1
+// 		for (var i = 0; i < data.length; i++){
+// 			if (data[i].trial_id == 'refresh_trial'){
+// 				total_trials+=1
+// 				if (data[i].rt != -1){
+// 					sum_rt += data[i].rt
+// 					sum_responses += 1
+// 					if (data[i].key_press == data[i].correct_response){
+// 						correct += 1
 		
-					}
-				}
+// 					}
+// 				}
 		
-			}
+// 			}
 	
-		}
+// 		}
 	
-		var accuracy = correct / total_trials
-		var missed_responses = (total_trials - sum_responses) / total_trials
-		var ave_rt = sum_rt / sum_responses
+// 		var accuracy = correct / total_trials
+// 		var missed_responses = (total_trials - sum_responses) / total_trials
+// 		var ave_rt = sum_rt / sum_responses
 	
-		feedback_text = "<br>Please take this time to read your feedback and to take a short break! "
-		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+// 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! "
+// 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
 
-		if (accuracy > accuracy_thresh){
-			feedback_text +=
-					'</p><p class = block-text>Done with this practice.' 
+// 		if (accuracy > accuracy_thresh){
+// 			feedback_text +=
+// 					'</p><p class = block-text>Done with this practice.' 
 	
-		} else if (accuracy < accuracy_thresh){
-			feedback_text +=
-					'</p><p class = block-text> Remember: <br>' + getPromptTaskList()
+// 		} else if (accuracy < accuracy_thresh){
+// 			feedback_text +=
+// 					'</p><p class = block-text> Remember: <br>' + getPromptTaskList()
 					
-			if (missed_responses > missed_thresh){
-				feedback_text +=
-						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
-			}
+// 			if (missed_responses > missed_thresh){
+// 				feedback_text +=
+// 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+// 			}
 
-	      	if (ave_rt > rt_thresh){
-	        	feedback_text += 
-	            	'</p><p class = block-text>You have been responding too slowly.'
-	      	}
+// 	      	if (ave_rt > rt_thresh){
+// 	        	feedback_text += 
+// 	            	'</p><p class = block-text>You have been responding too slowly.'
+// 	      	}
 
 		
-			// if (refreshCount == refresh_thresh){
-			// 	feedback_text +=
-			// 		'</p><p class = block-text>Done with this practice.' 
-			// 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-			// 		return false
-			// }
+// 			// if (refreshCount == refresh_thresh){
+// 			// 	feedback_text +=
+// 			// 		'</p><p class = block-text>Done with this practice.' 
+// 			// 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+// 			// 		return false
+// 			// }
 			
 			
-			return false
+// 			return false
 		
-		}
+// 		}
 	
-	}
+// 	}
 	
-}
+// }
 
-var testTrials0 = []
-//testTrials.push(test_feedback_block)
-for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
-	testTrials0.push(start_fixation_block);
-	testTrials0.push(training_block);
-	testTrials0.push(cue_block);
-	testTrials0.push(fixation_block);
-	testTrials0.push(probe_block);
-	testTrials0.push(ITI_fixation_block);
-}
+// var testTrials0 = []
+// //testTrials.push(test_feedback_block)
+// for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
+// 	testTrials0.push(start_fixation_block);
+// 	testTrials0.push(training_block);
+// 	testTrials0.push(cue_block);
+// 	testTrials0.push(fixation_block);
+// 	testTrials0.push(probe_block);
+// 	testTrials0.push(ITI_fixation_block);
+// }
 
-var testCount = 0
-var testNode0 = {
-	timeline: testTrials0,
-	loop_function: function(data) {
-		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		testCount += 1
-		current_trial = 0 
+// var testCount = 0
+// var testNode0 = {
+// 	timeline: testTrials0,
+// 	loop_function: function(data) {
+// 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+// 		testCount += 1
+// 		current_trial = 0 
 		
-		//below are counters to see if the subject is treating this task as a directed remembering as opposed to a directed forgetting task
-		var respond_remember_total = 0
-		var neg_respond_remember = 0
-		var pos_respond_remember = 0
+// 		//below are counters to see if the subject is treating this task as a directed remembering as opposed to a directed forgetting task
+// 		var respond_remember_total = 0
+// 		var neg_respond_remember = 0
+// 		var pos_respond_remember = 0
 	
-		for (var i = 0; i < data.length; i++) {
-			if (data[i].trial_id == 'test_trial') {
-				if(data[i].probe_type == 'neg'){
-					respond_remember_total += 1
-					if(data[i].key_press == choices[0]){
-						neg_respond_remember += 1
-					}
-				}else if (data[i].probe_type == 'pos'){
-					respond_remember_total += 1
-					if(data[i].key_press == choices[1]){
-						pos_respond_remember += 1
-					}
-				}
+// 		for (var i = 0; i < data.length; i++) {
+// 			if (data[i].trial_id == 'test_trial') {
+// 				if(data[i].probe_type == 'neg'){
+// 					respond_remember_total += 1
+// 					if(data[i].key_press == choices[0]){
+// 						neg_respond_remember += 1
+// 					}
+// 				}else if (data[i].probe_type == 'pos'){
+// 					respond_remember_total += 1
+// 					if(data[i].key_press == choices[1]){
+// 						pos_respond_remember += 1
+// 					}
+// 				}
 			
-			}
-		}
+// 			}
+// 		}
 	
 	
-		var directed_remembering_total = neg_respond_remember + pos_respond_remember
-		var directed_remembering_percent = directed_remembering_total / respond_remember_total 
+// 		var directed_remembering_total = neg_respond_remember + pos_respond_remember
+// 		var directed_remembering_percent = directed_remembering_total / respond_remember_total 
 
-		console.log(directed_remembering_percent)
-		if (directed_remembering_percent >= 0.75){
-			test_feedback_text = 'According to the pattern of your responses, we believe that you are treating this task as a directed remembering task.  Please remember that <i>this is a directed forgetting task</i>.</p>'+
-								 '<p class = block-text>When you are presented with the cue TOP, you should <i> forget the top letters</i> and <i>remember the bottom letters.</i></p>'+
-								 '<p class = block-text>When you are presented with the cue BOT, you should <i> forget the bottom letters</i> and <i>remember the top letters.</i></p>'+
-								 '<p class = block-text>Press the <i>left</i> arrow key if the probe letter <i> is in the memory set</i>, and the <i>right</i> if it is <i>not in the memory set</i>.</p>'+
-								 '<p class = block-text>Press enter to continue.'	
-		} 
-			var sum_rt = 0
-			var sum_responses = 0
-			var correct = 0
-			var total_trials = 0
+// 		console.log(directed_remembering_percent)
+// 		if (directed_remembering_percent >= 0.75){
+// 			test_feedback_text = 'According to the pattern of your responses, we believe that you are treating this task as a directed remembering task.  Please remember that <i>this is a directed forgetting task</i>.</p>'+
+// 								 '<p class = block-text>When you are presented with the cue TOP, you should <i> forget the top letters</i> and <i>remember the bottom letters.</i></p>'+
+// 								 '<p class = block-text>When you are presented with the cue BOT, you should <i> forget the bottom letters</i> and <i>remember the top letters.</i></p>'+
+// 								 '<p class = block-text>Press the <i>left</i> arrow key if the probe letter <i> is in the memory set</i>, and the <i>right</i> if it is <i>not in the memory set</i>.</p>'+
+// 								 '<p class = block-text>Press enter to continue.'	
+// 		} 
+// 			var sum_rt = 0
+// 			var sum_responses = 0
+// 			var correct = 0
+// 			var total_trials = 0
 	
-			for (i = 0; i < data.length; i++){
-				if (data[i].trial_id == "test_trial"){
-					total_trials+=1
-					if (data[i].rt != -1){
-						sum_rt += data[i].rt
-						sum_responses += 1
-						if (data[i].key_press == data[i].correct_response){
-							correct += 1
+// 			for (i = 0; i < data.length; i++){
+// 				if (data[i].trial_id == "test_trial"){
+// 					total_trials+=1
+// 					if (data[i].rt != -1){
+// 						sum_rt += data[i].rt
+// 						sum_responses += 1
+// 						if (data[i].key_press == data[i].correct_response){
+// 							correct += 1
 		
-						}
-					}
+// 						}
+// 					}
 		
-				}
+// 				}
 	
-			}
+// 			}
 		
-			var accuracy = correct / total_trials
-			var missed_responses = (total_trials - sum_responses) / total_trials
-			var ave_rt = sum_rt / sum_responses
+// 			var accuracy = correct / total_trials
+// 			var missed_responses = (total_trials - sum_responses) / total_trials
+// 			var ave_rt = sum_rt / sum_responses
 	
-			test_feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
-			test_feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
-			
-		
-			if (accuracy < accuracy_thresh){
-				test_feedback_text +=
-						'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTaskList()
-			}
-			if (missed_responses > missed_thresh){
-				test_feedback_text +=
-						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
-			}
-
-	      	if (ave_rt > rt_thresh){
-	        	feedback_text += 
-	            	'</p><p class = block-text>You have been responding too slowly.'
-	      	}			
-		
-	}
-
-}
-
-var testTrials = []
-testTrials.push(test_feedback_block)
-for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
-	testTrials.push(start_fixation_block);
-	testTrials.push(training_block);
-	testTrials.push(cue_block);
-	testTrials.push(fixation_block);
-	testTrials.push(probe_block);
-	testTrials.push(ITI_fixation_block);
-}
-
-var testNode = {
-	timeline: testTrials,
-	loop_function: function(data) {
-		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		testCount += 1
-		current_trial = 0 
-		
-		//below are counters to see if the subject is treating this task as a directed remembering as opposed to a directed forgetting task
-		var respond_remember_total = 0
-		var neg_respond_remember = 0
-		var pos_respond_remember = 0
-	
-		for (var i = 0; i < data.length; i++) {
-			if (data[i].trial_id == 'test_trial') {
-				if(data[i].probe_type == 'neg'){
-					respond_remember_total += 1
-					if(data[i].key_press == choices[0]){
-						neg_respond_remember += 1
-					}
-				}else if (data[i].probe_type == 'pos'){
-					respond_remember_total += 1
-					if(data[i].key_press == choices[1]){
-						pos_respond_remember += 1
-					}
-				}
-			
-			}
-		}
-	
-	
-		var directed_remembering_total = neg_respond_remember + pos_respond_remember
-		var directed_remembering_percent = directed_remembering_total / respond_remember_total 
-
-		console.log(directed_remembering_percent)
-		if (directed_remembering_percent >= 0.75){
-			test_feedback_text = 'According to the pattern of your responses, we believe that you are treating this task as a directed remembering task.  Please remember that <i>this is a directed forgetting task</i>.</p>'+
-								 '<p class = block-text>When you are presented with the cue TOP, you should <i> forget the top letters</i> and <i>remember the bottom letters.</i></p>'+
-								 '<p class = block-text>When you are presented with the cue BOT, you should <i> forget the bottom letters</i> and <i>remember the top letters.</i></p>'+
-								 '<p class = block-text>Press the <i>left</i> arrow key if the probe letter <i> is in the memory set</i>, and the <i>right</i> if it is <i>not in the memory set</i>.</p>'+
-								 '<p class = block-text>Press enter to continue.'	
-		} 
-			var sum_rt = 0
-			var sum_responses = 0
-			var correct = 0
-			var total_trials = 0
-	
-			for (i = 0; i < data.length; i++){
-				if (data[i].trial_id == "test_trial"){
-					total_trials+=1
-					if (data[i].rt != -1){
-						sum_rt += data[i].rt
-						sum_responses += 1
-						if (data[i].key_press == data[i].correct_response){
-							correct += 1
-		
-						}
-					}
-		
-				}
-	
-			}
-		
-			var accuracy = correct / total_trials
-			var missed_responses = (total_trials - sum_responses) / total_trials
-			var ave_rt = sum_rt / sum_responses
-	
-			test_feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
-			test_feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+// 			test_feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
+// 			test_feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 			
 		
-			if (accuracy < accuracy_thresh){
-				test_feedback_text +=
-						'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTaskList()
-			}
-			if (missed_responses > missed_thresh){
-				test_feedback_text +=
-						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
-			}
+// 			if (accuracy < accuracy_thresh){
+// 				test_feedback_text +=
+// 						'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTaskList()
+// 			}
+// 			if (missed_responses > missed_thresh){
+// 				test_feedback_text +=
+// 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+// 			}
 
-	      	if (ave_rt > rt_thresh){
-	        	feedback_text += 
-	            	'</p><p class = block-text>You have been responding too slowly.'
-	      	}
+// 	      	if (ave_rt > rt_thresh){
+// 	        	feedback_text += 
+// 	            	'</p><p class = block-text>You have been responding too slowly.'
+// 	      	}			
+		
+// 	}
+
+// }
+
+// var testTrials = []
+// testTrials.push(test_feedback_block)
+// for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
+// 	testTrials.push(start_fixation_block);
+// 	testTrials.push(training_block);
+// 	testTrials.push(cue_block);
+// 	testTrials.push(fixation_block);
+// 	testTrials.push(probe_block);
+// 	testTrials.push(ITI_fixation_block);
+// }
+
+// var testNode = {
+// 	timeline: testTrials,
+// 	loop_function: function(data) {
+// 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+// 		testCount += 1
+// 		current_trial = 0 
+		
+// 		//below are counters to see if the subject is treating this task as a directed remembering as opposed to a directed forgetting task
+// 		var respond_remember_total = 0
+// 		var neg_respond_remember = 0
+// 		var pos_respond_remember = 0
+	
+// 		for (var i = 0; i < data.length; i++) {
+// 			if (data[i].trial_id == 'test_trial') {
+// 				if(data[i].probe_type == 'neg'){
+// 					respond_remember_total += 1
+// 					if(data[i].key_press == choices[0]){
+// 						neg_respond_remember += 1
+// 					}
+// 				}else if (data[i].probe_type == 'pos'){
+// 					respond_remember_total += 1
+// 					if(data[i].key_press == choices[1]){
+// 						pos_respond_remember += 1
+// 					}
+// 				}
+			
+// 			}
+// 		}
+	
+	
+// 		var directed_remembering_total = neg_respond_remember + pos_respond_remember
+// 		var directed_remembering_percent = directed_remembering_total / respond_remember_total 
+
+// 		console.log(directed_remembering_percent)
+// 		if (directed_remembering_percent >= 0.75){
+// 			test_feedback_text = 'According to the pattern of your responses, we believe that you are treating this task as a directed remembering task.  Please remember that <i>this is a directed forgetting task</i>.</p>'+
+// 								 '<p class = block-text>When you are presented with the cue TOP, you should <i> forget the top letters</i> and <i>remember the bottom letters.</i></p>'+
+// 								 '<p class = block-text>When you are presented with the cue BOT, you should <i> forget the bottom letters</i> and <i>remember the top letters.</i></p>'+
+// 								 '<p class = block-text>Press the <i>left</i> arrow key if the probe letter <i> is in the memory set</i>, and the <i>right</i> if it is <i>not in the memory set</i>.</p>'+
+// 								 '<p class = block-text>Press enter to continue.'	
+// 		} 
+// 			var sum_rt = 0
+// 			var sum_responses = 0
+// 			var correct = 0
+// 			var total_trials = 0
+	
+// 			for (i = 0; i < data.length; i++){
+// 				if (data[i].trial_id == "test_trial"){
+// 					total_trials+=1
+// 					if (data[i].rt != -1){
+// 						sum_rt += data[i].rt
+// 						sum_responses += 1
+// 						if (data[i].key_press == data[i].correct_response){
+// 							correct += 1
+		
+// 						}
+// 					}
+		
+// 				}
+	
+// 			}
+		
+// 			var accuracy = correct / total_trials
+// 			var missed_responses = (total_trials - sum_responses) / total_trials
+// 			var ave_rt = sum_rt / sum_responses
+	
+// 			test_feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
+// 			test_feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+			
+		
+// 			if (accuracy < accuracy_thresh){
+// 				test_feedback_text +=
+// 						'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTaskList()
+// 			}
+// 			if (missed_responses > missed_thresh){
+// 				test_feedback_text +=
+// 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+// 			}
+
+// 	      	if (ave_rt > rt_thresh){
+// 	        	feedback_text += 
+// 	            	'</p><p class = block-text>You have been responding too slowly.'
+// 	      	}
 			  
 
-			if (testCount == numTestBlocks){
-				test_feedback_text +=
-						'</p><p class = block-text>Done with this test.s'
-				return false
-			}
+// 			if (testCount == numTestBlocks){
+// 				test_feedback_text +=
+// 						'</p><p class = block-text>Done with this test.s'
+// 				return false
+// 			}
 		
-	}
+// 	}
 
-}
+// }
 
 
-/* create experiment definition array */
-var directed_forgetting_single_task_network__fmri_experiment = [];
+// /* create experiment definition array */
+var directed_forgetting_single_task_network__practice_experiment = [];
 
-directed_forgetting_single_task_network__fmri_experiment.push(motor_setup_block)
+directed_forgetting_single_task_network__practice_experiment.push(motor_setup_block)
 
-directed_forgetting_single_task_network__fmri_experiment.push(practiceNode)
-directed_forgetting_single_task_network__fmri_experiment.push(feedback_block)
+directed_forgetting_single_task_network__practice_experiment.push(practiceNode)
+directed_forgetting_single_task_network__practice_experiment.push(feedback_block)
 //test_keys(directed_forgetting_single_task_network__fmri_experiment, [getChoices()[1], getChoices()[0]])
 
 
-directed_forgetting_single_task_network__fmri_experiment.push(end_block);
+directed_forgetting_single_task_network__practice_experiment.push(end_block);

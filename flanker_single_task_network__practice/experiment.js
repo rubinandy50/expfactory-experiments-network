@@ -327,7 +327,7 @@ var fileTypePNG = '.png"></img>'
 var preFileType = '<img class = center src="/static/experiments/flanker_single_task_network__fmri/images/'
 var flanker_boards = [['<div class = bigbox><div class = centerbox><div class = flankerLeft_2><div class = cue-text>'],['</div></div><div class = flankerLeft_1><div class = cue-text>'],['</div></div><div class = flankerMiddle><div class = cue-text>'],['</div></div><div class = flankerRight_1><div class = cue-text>'],['</div></div><div class = flankerRight_2><div class = cue-text>'],['</div></div></div></div>']]					   
 
-var practice_len = 4 // must be divisible by 4
+var practice_len = 12 // must be divisible by 4
 var exp_len = 144 // must be divisible by 4, 100 in original
 var numTrialsPerBlock = 36 //must be divisible by 4
 var numTestBlocks = exp_len / numTrialsPerBlock
@@ -691,10 +691,12 @@ var refreshNode = {
 			  }
 		exp_phase = 'test'
 	  
-		return false
+			if (practice_len == practiceCount) { 
+				return false
+			}
 
 		}
-		
+		return true
 	}
 }
 
@@ -923,16 +925,16 @@ flanker_single_task_network__fmri_experiment = []
 
 flanker_single_task_network__fmri_experiment.push(design_setup_block)
 flanker_single_task_network__fmri_experiment.push(motor_setup_block)
-test_keys(flanker_single_task_network__fmri_experiment, [getPossibleResponses()[0][1], getPossibleResponses()[1][1]])
+// test_keys(flanker_single_task_network__fmri_experiment, [getPossibleResponses()[0][1], getPossibleResponses()[1][1]])
 
 
 flanker_single_task_network__fmri_experiment.push(refreshNode)
 flanker_single_task_network__fmri_experiment.push(refresh_feedback_block)
 
-cni_bore_setup(flanker_single_task_network__fmri_experiment)
+// cni_bore_setup(flanker_single_task_network__fmri_experiment)
 
-flanker_single_task_network__fmri_experiment.push(testNode0)
-flanker_single_task_network__fmri_experiment.push(testNode)
-flanker_single_task_network__fmri_experiment.push(feedback_block)
+// flanker_single_task_network__fmri_experiment.push(testNode0)
+// flanker_single_task_network__fmri_experiment.push(testNode)
+// flanker_single_task_network__fmri_experiment.push(feedback_block)
 
 flanker_single_task_network__fmri_experiment.push(end_block)

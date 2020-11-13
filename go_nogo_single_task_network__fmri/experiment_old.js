@@ -242,10 +242,10 @@ function getITI_resp() { //added for fMRI compatibility
 
 function getRefreshFeedback() { 
 	if (exp_id='instructions') {
-return '<div class = bigbox><div class = picture_box><p class = block-text>' + 
+return '<div class = bigbox><div class = picture_box><p class = instruct-text>' + 
 	    'In this experiment, ' + stims[0][0] + ' and ' + stims[1][0] + ' squares will appear on the screen. '+
-	    'If you see the ' + stims[0][0] + ' square you should <b> respond by pressing your ' + getPossibleResponses()[0] +  ' as quickly as possible</b>. '+
-	    'If you see the ' + stims[1][0] + ' square you should <b> not respond</b>.</p>'+
+	    'If you see the ' + stims[0][0] + ' square you should <i> respond by pressing the' + getPossibleResponses()[0] +  'as quickly as possible</i>. '+
+	    'If you see the ' + stims[1][0] + ' square you should <i> not respond</i>.</p>'+
 	    '<p class = block-text>We will begin with practice. You will receive feedback telling you if you were correct.</p>'+
 		'<p class = block-text> Press any button when you are ready to begin </p></div></div>'} 
 
@@ -265,7 +265,6 @@ var attention_check_thresh = 0.45
 var sumInstructTime = 0 //ms
 var instructTimeThresh = 0 ///in seconds
 var credit_var = 0
-var block_stims = []
 
 
 // task specific variables
@@ -435,7 +434,7 @@ var practice_thresh = 1
 var refresh_thresh = 1
 
 
-var exp_len = 126 //multiple of numTrialsPerBlock
+var exp_len = 252 //multiple of numTrialsPerBlock
 var numTrialsPerBlock = 63 // multiple of 7 (6go:1nogo)
 var numTestBlocks = exp_len / numTrialsPerBlock
 
@@ -597,18 +596,17 @@ var reset_block = {
 
 var feedback_text = 
 	'Welcome to the experiment.'
-
 var feedback_block = {
 	type: 'poldrack-single-stim',
 	data: {
-		trial_id: "feedback_block"
+		trial_id: "practice-no-stop-feedback"
 	},
 	choices: 'none',
 	stimulus: getBlockFeedback,
 	timing_post_trial: 0,
 	is_html: true,
 	timing_response: 10000,
-	response_ends_trial: false, 
+	response_ends_trial: true, 
 
 };
 
@@ -754,6 +752,21 @@ var refreshTrials = []
 refreshTrials.push(refresh_feedback_block)
 for (var i = 0; i < refresh_len; i ++){
 
+	var update_global_fixation = {
+			type: 'poldrack-single-stim',
+			stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
+			is_html: true,
+			choices: 'none',
+			data: {
+				trial_id: "prompt_fixation",
+			},
+			timing_post_trial: 0,
+			timing_stim: 500,
+			timing_response: 500,
+			prompt: prompt_text_list
+		};
+
+
 	var refresh_block = {
 	  type: 'poldrack-categorize',
 	  stimulus: getStim,
@@ -783,7 +796,9 @@ var refreshNode = {
 	timeline: refreshTrials,
 	loop_function: function(data){
 		refreshCount += 1
-		current_trial = 0	
+		current_trial = 0
+		block_stims = jsPsych.randomization.repeat(practice_stimuli, refresh_len / practice_stimuli.length); 
+	
 		var sum_rt = 0
 		var sum_responses = 0
 		var correct = 0
@@ -791,8 +806,7 @@ var refreshNode = {
 		
 		var total_go_trials = 0
 		var missed_response = 0
-		block_stims = getTestStimuli(numTrialsPerBlock)
-
+	
 		for (var i = 0; i < data.length; i++){
 			if (data[i].trial_id == "practice_trial"){
 				total_trials+=1
@@ -824,6 +838,7 @@ var refreshNode = {
 		if (accuracy > accuracy_thresh){
 			feedback_text +=
 					'</p><p class = block-text>Done with this practice.' 
+			return false
 	
 		} else if (accuracy < accuracy_thresh){
 			feedback_text +=
@@ -842,6 +857,7 @@ var refreshNode = {
 			if (refreshCount == refresh_thresh){
 				feedback_text +=
 					'</p><p class = block-text>Done with this practice.'
+					block_stims = getTestStimuli(numTrialsPerBlock)
 
 					return false
 			}
@@ -918,32 +934,35 @@ var testNode0 = {
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
 		feedback_text += "</p><p class = block-text>You have completed " +testCount+ " out of " +numTestBlocks+ " blocks of trials."
 
+		if (testCount >= numTestBlocks){
 			
 			feedback_text +=
+					'</p><p class = block-text>Done with this test. Press Enter to continue.<br> '+
 					'If you have been completing tasks continuously for an hour or more, please take a 15-minute break before starting again.' 
-	
-		
-		if (accuracy < accuracy_thresh){
-		feedback_text +=
-				'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text_list
-				
-		}
-
-		if (ave_rt > rt_thresh) {
-			feedback_text += 
-				'</p><p class = block-text>You have been responding too slowly.'
-		}
-		
-		if (missed_responses > missed_thresh){
-			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
-		}
-	
-		
-			block_stims = getTestStimuli(numTrialsPerBlock)
-			trial_id = 'test_trial'		
 			return false
+	
+		} else {
+			if (accuracy < accuracy_thresh){
+			feedback_text +=
+					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text_list
+					
+			}
 
+	      	if (ave_rt > rt_thresh) {
+	        	feedback_text += 
+	            	'</p><p class = block-text>You have been responding too slowly.'
+	      	}
+			
+			if (missed_responses > missed_thresh){
+				feedback_text +=
+						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+			}
+		
+			
+				block_stims = getTestStimuli(numTrialsPerBlock)
+				return true
+		
+		}
 	
 	}
 	
@@ -1035,7 +1054,7 @@ var testNode = {
 				feedback_text +=
 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 			}
-			block_stims = getTestStimuli(numTrialsPerBlock);
+			block_stims = jsPsych.randomization.repeat(test_stimuli_block, numTrialsPerBlock / test_stimuli_block.length);
 			return true
 		
 		}

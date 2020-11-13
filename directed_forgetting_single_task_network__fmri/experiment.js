@@ -6,6 +6,17 @@ function addID() {
 }
 
 
+var updateTrialTypesWithDesigns = function(stims, design_events){
+	var new_stims = []
+	for (var i = 0; i < design_events.length; i++) {
+		var curr_stim = {
+			stim: stims[i].stim,
+			correct_response: stims[i].correct_response,		}
+		new_stims.push(curr_stim)
+	}
+	return new_stims
+}
+
 //added for motor counterbalancing
 function getMotorPerm() {
 	return motor_perm
@@ -470,7 +481,7 @@ var end_block = {
 	data: {
 		trial_id: "end",
 	},
-	timing_response: 180000,
+	timing_response: 10000,
 	text: '<div class = centerbox><p class = center-block-text>Thanks for completing this task!',
 	cont_key: [32],
 	timing_post_trial: 0,
@@ -486,7 +497,7 @@ var feedback_instruct_block = {
 	data: {
 		trial_id: 'instruction'
 	},
-	cont_key: [13],
+	cont_key: [32],
 	text: getInstructFeedback,
 	timing_post_trial: 0,
 	timing_response: 180000
@@ -1078,7 +1089,11 @@ var refreshNode = {
 	loop_function: function(data){
 		refreshCount += 1
 		stims = createTrialTypes(refresh_length,numLetters)
-	
+		stims = createTrialTypes(numTrialsPerBlock)
+		first_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		des_events = des_events.slice(numTrialsPerBlock,)
+		stims = updateTrialTypesWithDesigns(stims, first_block_des_events)
+		
 		var sum_rt = 0
 		var sum_responses = 0
 		var correct = 0
@@ -1105,7 +1120,6 @@ var refreshNode = {
 		var ave_rt = sum_rt / sum_responses
 	
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! "
-		stims = createTrialTypes(numTrialsPerBlock,numLetters)
 
 		if (accuracy > accuracy_thresh){
 			feedback_text +=
@@ -1158,6 +1172,9 @@ var testNode0 = {
 	timeline: testTrials0,
 	loop_function: function(data) {
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+		curr_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		des_events = des_events.slice(numTrialsPerBlock,)
+		stims = updateTrialTypesWithDesigns(stims, curr_block_des_events)
 		testCount += 1
 		current_trial = 0 
 		
@@ -1257,6 +1274,10 @@ var testNode = {
 	timeline: testTrials,
 	loop_function: function(data) {
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+		stims = createTrialTypes(numTrialsPerBlock,numLetters)
+		curr_block_des_events = des_events.slice(0,numTrialsPerBlock)
+		des_events = des_events.slice(numTrialsPerBlock,)
+		stims = updateTrialTypesWithDesigns(stims, curr_block_des_events)
 		testCount += 1
 		current_trial = 0 
 		

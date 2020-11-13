@@ -5,6 +5,7 @@ function addID() {
   jsPsych.data.addDataToLastTrial({exp_id: 'directed_forgetting_single_task_network__fmri'})
 }
 
+var motor_perm = 0
 
 //added for motor counterbalancing
 function getMotorPerm() {
@@ -241,14 +242,14 @@ var getLettersHTML = function(){
 		   task_boards[6]
 }
 
+
 var getCorrectResponse = function(probeType){
-	
 	if (probeType == 'pos') {
-		return choices[0]
+		return getPossibleResponses()[0][1]
 	} else if (probeType == 'neg') {
-		return choices[1]
+		return getPossibleResponses()[1][1]
 	} else if (probeType == 'con') {
-		return choices[1]
+		return getPossibleResponses()[1][1]
 	}
 }
 
@@ -329,19 +330,23 @@ function getChoices() {
 	}
 }
 
-function getResponses() {
+var possible_responses = [['index finger', 89],['middle finger', 71]]
+
+
+function getPossibleResponses() {
 	if (getMotorPerm()==0) {
-		return ['middle finger', 'index finger'] 
+		return possible_responses
 	} else if (getMotorPerm()==1) {
-		return ['index finger', 'middle finger']
+		return [['middle finger', 71],['index finger', 89]]
 	}
 }
+
 
 function getPromptTaskList() {
 	return '<ul style="text-align:left;"><font color="white">'+
 							'<li>Please respond if the probe (single letter) was in the memory set.'+
-						   	'<li>In memory set: '+getResponses()[0]+'</li>'+
-						   	'<li>Not in memory set: '+getResponses()[1]+'</li>'+
+						   	'<li>In memory set: '+getPossibleResponses()[0][0]+'</li>'+
+						   	'<li>Not in memory set: '+getPossibleResponses()[1][0]+'</li>'+
 						   '</font></ul>'
 
 }
@@ -355,7 +360,7 @@ var getRefreshFeedback = function() {
 	if (getRefreshTrialID()=='instructions') {
 		return '<div class = instructbox>'+
 		'<p class = instruct-text>In this task, you will see a gray shape on the right of the screen and a black shape on the left of the screen.</p>'+
-		'<p class = instruct-text><strong>Your task is to press your '+getResponses()[1] +' if they are the same shape and your '+getResponses()[0]+' if they are different.</strong></p>'+
+		'<p class = instruct-text><strong>Your task is to press your '+getPossibleResponses()[0][0] +' if they are the same shape and your '+getPossibleResponses()[1][0]+' if they are different.</strong></p>'+
 		'<p class = instruct-text>On some trials a white shape will also be presented on the left. You should ignore the white shape. Your task is only to respond based on whether the gray and black shapes are the same.</p>'+
 		'<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
 		'<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
@@ -433,7 +438,6 @@ var stims = createTrialTypes(practice_length,numLetters)
 ITIs_stim = []
 ITIs_resp = [] 
 
-motor_perm = 0
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
@@ -477,21 +481,20 @@ var instructions_block = {
 			''+numLetters+' letters. You must memorize all '+numLetters+' letters. </p>'+
 		
 			'<p class = block-text>After the presentation of '+numLetters+' letters, there will be a short delay. You will then be presented with a cue, '+
-			'either <i>TOP</i> or <i>BOT</i>. This will instruct you to <i>forget</i> the '+
-			''+numLetters/2+' letters located at either the top or bottom (respectively) of the screen.</p>' + 
+			'either <b>TOP</b> or <b>BOT</b>. This will instruct you to <b>forget</b> the '+
+			''+numLetters/2+' letters located at either the top or bottom (respectively) of the screen.</b>' + 
 			
-			'<p class = block-text>So if you get the cue <i>TOP</i>, please <i>forget</i> the top '+numLetters/2+' letters.</p>'+
+			'<p class = block-text>So if you get the cue <b>TOP</b>, please <b>forget</b> the top '+numLetters/2+' letters.</p>'+
 		
 			'<p class = block-text>'+
-				'The '+numLetters/2+' remaining letters that you must remember are called your <i>memory set</i>. You should remember '+
+				'The '+numLetters/2+' remaining letters that you must remember are called your <b>memory set</b>. You should remember '+
 				'these '+numLetters/2+' letters while forgetting the other '+numLetters/2+'.</p>'+
 	
 			'<p class = block-text>You will then be presented with a single '+
-			'letter. Respond with the '+ getResponses()[1] + 'key if it is in the memory set, and the ' + getResponses()[0]+
+			'letter. Respond with the '+ getPossibleResponses()[0][0] + 'key if it is in the memory set, and the ' + getPossibleResponses()[0][1]+
 			'key if it was not in the memory set.</p>'+
 				
-			'<p class = block-text>We will start practice when you finish instructions. Please make sure you understand the instructions before moving on. During practice, you will receive a reminder of the rules.  <i>This reminder will be taken out for test</i>.</p>'+
-			'<p class = block-text> Please press any button to let the experimenters know when you are ready to begin practice. </p>' + 
+			'<p class = block-text>We will start practice when you finish instructions. Please make sure you understand the instructions before moving on. During practice, you will receive a reminder of the rules.  <b>This reminder will be taken out for test</b>.</p>'+
 		'</div>',
 	],
 	allow_keys: false,
@@ -529,7 +532,9 @@ var motor_setup_block = {
 			"<p class = center-block-text>motor permutation (0-1):</p>"
 		]
 	], on_finish: function(data) {
-		motor_perm=parseInt(data.responses.slice(7, 10))		
+		motor_perm=parseInt(data.responses.slice(7, 10))
+		stims = createTrialTypes(practice_length, numLetters)
+		
 	}
 }
 

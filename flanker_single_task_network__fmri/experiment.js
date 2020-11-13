@@ -7,6 +7,26 @@ function getMotorPerm() {
 	return motor_perm
 }
 
+function popData(array) { 
+	array.data.pop()
+}
+
+function popImage(array) {
+	array.image.pop()
+}
+
+function getStimTrials() {
+    return trial_stim
+}
+
+function getDataTrials() { 
+	return trial_data
+}
+
+function getResponseTrials() {
+    return response_stim
+}
+
 //FUNCTIONS FOR GETTING FMRI SEQUENCES
 function getdesignITIs(design_num) {
 	x = fetch(pathDesignSource+'design_'+design_num+'/ITIs_clean.txt').then(res => res.text()).then(res => res).then(text => text.split(/\r?\n/));
@@ -193,10 +213,10 @@ function getPromptTextList() {
 
 function getCorrectResponse(center_letter) { 
 	if (center_letter == 'F') { 
-		correct_response = getPossibleResponses()[1][0] 
+		correct_response = getPossibleResponses()[1][1] 
 	}
 	if (center_letter == 'H') { 
-		correct_response = getPossibleResponses()[1][0]
+		correct_response = getPossibleResponses()[0][1]
 	}
 	return correct_response
 	}
@@ -213,7 +233,7 @@ function createTrials(numTrials) {
 			trial_id: 'stim',
 			flanker: 'F',
 			center_letter: 'H', 
-			correct_response: getCorrectResponse('F')
+			correct_response: getCorrectResponse('H')
 		}
 	}, {
 		image: flanker_boards[0]+ preFileType + 'H' + fileTypePNG +
@@ -225,7 +245,8 @@ function createTrials(numTrials) {
 			flanker_condition: 'incongruent',
 			trial_id: 'stim',
 			flanker: 'H',
-			center_letter: 'F'
+			center_letter: 'F', 
+			correct_response: getCorrectResponse('F')
 		}
 	}, {
 		image: flanker_boards[0]+ preFileType + 'H' + fileTypePNG +
@@ -237,7 +258,9 @@ function createTrials(numTrials) {
 			flanker_condition: 'congruent',
 			trial_id: 'stim',
 			flanker: 'H',
-			center_letter: 'H'
+			center_letter: 'H',
+			correct_response: getCorrectResponse('H')
+
 		}
 	}, {
 		image: flanker_boards[0]+ preFileType + 'F' + fileTypePNG +
@@ -249,7 +272,9 @@ function createTrials(numTrials) {
 			flanker_condition: 'congruent',
 			trial_id: 'stim',
 			flanker: 'F',
-			center_letter: 'F'
+			center_letter: 'F',
+			correct_response: getCorrectResponse('H')
+
 		}
 	}];
 	test_stimuli = jsPsych.randomization.repeat(test_stimuli, numTrials / 4, true);
@@ -292,6 +317,7 @@ var test_stimuli = [{
 		trial_id: 'stim',
 		flanker: 'F',
 		center_letter: 'H'
+		
 	}
 }, {
 	image: flanker_boards[0]+ preFileType + 'H' + fileTypePNG +
@@ -339,12 +365,11 @@ var numTrialsPerBlock = 48 //must be divisible by 4
 var numTestBlocks = exp_len / numTrialsPerBlock
 
 //var practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
-// var practice_trials = [] 
+var practice_trials = [] 
 // var test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
 // var practice_trials = createTrials(practice_len)
-// var practice_response_array = [];
-// for (i = 0; i < practice_trials.data.length; i++) {
-// 	practice_response_array.push(practice_trials.data[i].correct_response)
+var practice_response_array = [];
+
 // }
 
 // var test_response_array = [];
@@ -594,26 +619,30 @@ var motor_setup_block = {
 		]
 	], on_finish: function(data) {
 		motor_perm=parseInt(data.responses.slice(7, 10))
-		practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
-        test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+		trial_stim = createTrials(practice_len);
+		response_stim = trial_stim
+		trial_data = trial_stim
 		
+		for (i = 0; i < trial_stim.data.length; i++) {
+			practice_response_array.push(trial_stim.data[i].correct_response)
+		}
 	}
 }
-var practice_trials = createTrials(8)
+
 var practiceCount = 0
 var refreshTrials = []
 refreshTrials.push(refresh_feedback_block)
 for (i = 0; i < practice_len; i++) {
 	var refresh_block = {
 		type: 'poldrack-categorize',
-		stimulus: practice_trials.image[i],
+		stimulus: function() { return getStimTrials().image.pop() }, 	
 		is_html: true,
 		key_answer: practice_response_array[i],
 		correct_text: '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>', 
 		incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>', 
 		timeout_message: getTimeoutMessage, 
 		choices: [89, 71],
-		data: practice_trials.data[i],
+		data: function() { return getStimTrials().data.pop() }, 
 		timing_feedback_duration: 500, //500
 		timing_stim: 1000, //1000
 		show_stim_with_feedback: false,
@@ -644,11 +673,11 @@ var refreshNode = {
 	timeline: refreshTrials,
 	loop_function: function(data) {
 		
-		practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
-		practice_response_array = [];
-		for (i = 0; i < practice_trials.data.length; i++) {
-			practice_response_array.push(practice_trials.data[i].correct_response)
-		}		
+		// practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
+		// practice_response_array = [];
+		// for (i = 0; i < practice_trials.data.length; i++) {
+		// 	practice_response_array.push(practice_trials.data[i].correct_response)
+		// }		
 		
 		var sum_rt = 0
 		var sum_responses = 0
@@ -679,7 +708,7 @@ var refreshNode = {
 		if (accuracy > accuracy_thresh){
 			
 			refresh_feedback_text += '</p><p class = block-text>Done with this practice. The test session will begin shortly.' 
-			test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+			//test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
 			exp_phase = 'test'
 			return false; 
 
@@ -702,223 +731,212 @@ var refreshNode = {
 
 
 //in scanner test blocks
-var testCount = 0
-//first block skips intro feedback
-var testTrials0 = []
-for (i = 0; i < numTrialsPerBlock; i++) {
-	var test_fixation_block = {
-		type: 'poldrack-single-stim',
-		stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-		is_html: true,
-		data: {
-			trial_id: "test_fixation"
-		},
-		choices: 'none',
-		timing_stim: getITI_stim, //500 
-		timing_response: 500, //500
-		timing_post_trial: 0,
-		on_finish: changeData,
-	};
-	
-	var test_block = {
-		type: 'poldrack-single-stim',
-		stimulus: test_trials.image[i],
-		is_html: true,
-		choices: [71, 89],
-		data: test_trials.data[i],
-		feedback_duration: 0,
-		timing_response: 2000, //2000
-		timing_stim: 1000, //1000
-		response_ends_trial: false,
-		fixation_default: true,
-		show_stim_with_feedback: false,
-		timing_post_trial: 0,
-		on_finish: function(data) {
-			correct_trial = 0
-			if (data.key_press == data.correct_response) {
-				correct_trial = 1
-			}
+// var testCount = 0
+// //first block skips intro feedback
+// var testTrials0 = []
+// for (i = 0; i < numTrialsPerBlock; i++) {
+// 	var test_fixation_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
+// 		is_html: true,
+// 		data: {
+// 			trial_id: "test_fixation"
+// 		},
+// 		choices: 'none',
+// 		timing_stim: getITI_stim, //500 
+// 		timing_response: getITI_resp, 
+// 		data: test_trials.data[i],
+// 		feedback_duration: 0,
+// 		response_ends_trial: false,
+// 		fixation_default: true,
+// 		show_stim_with_feedback: false,
+// 		timing_post_trial: 0,
+// 		on_finish: function(data) {
+// 			correct_trial = 0
+// 			if (data.key_press == data.correct_response) {
+// 				correct_trial = 1
+// 			}
 			
-			current_block = testCount
+// 			current_block = testCount
 			
-			jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
-											 trial_id: 'test_trial',
-											 current_block: current_block,
-											 current_trial: i
-											 })
-		}
-	};
+// 			jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
+// 											 trial_id: 'test_trial',
+// 											 current_block: current_block,
+// 											 current_trial: i
+// 											 })
+// 		}
+// 	};
 	
-	testTrials0.push(test_fixation_block)
-	testTrials0.push(test_block)
-}
+// 	testTrials0.push(test_fixation_block)
+// 	testTrials0.push(test_block)
+// }
 
-var testNode0 = {
-	timeline: testTrials0,
-	loop_function: function(data) {
-		testCount += 1
-		test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
-		current_trial = 0 
+// var testNode0 = {
+// 	timeline: testTrials0,
+// 	loop_function: function(data) {
+// 		testCount += 1
+// 		test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+// 		current_trial = 0 
 	
-		var sum_rt = 0
-		var sum_responses = 0
-		var correct = 0
-		var total_trials = 0
+// 		var sum_rt = 0
+// 		var sum_responses = 0
+// 		var correct = 0
+// 		var total_trials = 0
 	
-		for (var i = 0; i < data.length; i++){
-			if (data[i].trial_id == 'test_trial') {
-				total_trials+=1
-				if (data[i].rt != -1){
-					sum_rt += data[i].rt
-					sum_responses += 1
-					if (data[i].key_press == data[i].correct_response){
-						correct += 1
+// 		for (var i = 0; i < data.length; i++){
+// 			if (data[i].trial_id == 'test_trial') {
+// 				total_trials+=1
+// 				if (data[i].rt != -1){
+// 					sum_rt += data[i].rt
+// 					sum_responses += 1
+// 					if (data[i].key_press == data[i].correct_response){
+// 						correct += 1
 		
-					}
-				}
+// 					}
+// 				}
 		
-			}
+// 			}
 	
-		}
+// 		}
 	
-		var accuracy = correct / total_trials
-		var missed_responses = (total_trials - sum_responses) / total_trials
-		var ave_rt = sum_rt / sum_responses
+// 		var accuracy = correct / total_trials
+// 		var missed_responses = (total_trials - sum_responses) / total_trials
+// 		var ave_rt = sum_rt / sum_responses
 
-		feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break."
-		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+// 		feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break."
+// 		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
-		if (accuracy < accuracy_thresh){
-			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
-		}
-		if (missed_responses > missed_response_thresh){
-			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond to each shape as quickly and as accurately as possible.'
-		}
+// 		if (accuracy < accuracy_thresh){
+// 			feedback_text +=
+// 					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
+// 		}
+// 		if (missed_responses > missed_response_thresh){
+// 			feedback_text +=
+// 					'</p><p class = block-text>You have not been responding to some trials.  Please respond to each shape as quickly and as accurately as possible.'
+// 		}
 
-      	if (ave_rt > rt_thresh){
-        	feedback_text += 
-            	'</p><p class = block-text>You have been responding too slowly. Please respond to each shape as quickly and as accurately as possible.'
-      	}
+//       	if (ave_rt > rt_thresh){
+//         	feedback_text += 
+//             	'</p><p class = block-text>You have been responding too slowly. Please respond to each shape as quickly and as accurately as possible.'
+//       	}
 	
 		
-	}
-}
+// 	}
+// }
 
 
 
-var testTrials = []
-testTrials.push(feedback_block)
-for (i = 0; i < numTrialsPerBlock; i++) {
-	var test_fixation_block = {
-		type: 'poldrack-single-stim',
-		stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-		is_html: true,
-		data: {
-			trial_id: "test_fixation"
-		},
-		choices: 'none',
-		timing_stim: getITI_stim, //500 
-		timing_response: 500, //500
-		timing_post_trial: 0,
-		on_finish: changeData,
-	};
+// var testTrials = []
+// testTrials.push(feedback_block)
+// for (i = 0; i < numTrialsPerBlock; i++) {
+// 	var test_fixation_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
+// 		is_html: true,
+// 		data: {
+// 			trial_id: "test_fixation"
+// 		},
+// 		choices: 'none',
+// 		timing_stim: getITI_stim, //500 
+// 		timing_response: 500, //500
+// 		timing_post_trial: 0,
+// 		on_finish: changeData,
+// 	};
 	
-	var test_block = {
-		type: 'poldrack-single-stim',
-		stimulus: test_trials.image[i],
-		is_html: true,
-		choices: [71, 89],
-		data: test_trials.data[i],
-		feedback_duration: 0,
-		timing_response: 2000, //2000
-		timing_stim: 1000, //1000
-		fixation_default: true,
-		fixation_stim: '<div class = "leftbox"><div class = centerbox><div class = fixation>+</div></div></div>' +
-		'<div class = "rightbox"><div class = centerbox><div class = fixation>+</div></div></div>',
-		response_ends_trial: false,
-		show_stim_with_feedback: false,
-		timing_post_trial: 0,
-		on_finish: function(data) {
-			correct_trial = 0
-			if (data.key_press == data.correct_response) {
-				correct_trial = 1
-			}
+// 	var test_block = {
+// 		type: 'poldrack-single-stim',
+// 		stimulus: test_trials.image[i],
+// 		is_html: true,
+// 		choices: [71, 89],
+// 		data: test_trials.data[i],
+// 		feedback_duration: 0,
+// 		timing_response: 2000, //2000
+// 		timing_stim: 1000, //1000
+// 		fixation_default: true,
+// 		fixation_stim: '<div class = "leftbox"><div class = centerbox><div class = fixation>+</div></div></div>' +
+// 		'<div class = "rightbox"><div class = centerbox><div class = fixation>+</div></div></div>',
+// 		response_ends_trial: false,
+// 		show_stim_with_feedback: false,
+// 		timing_post_trial: 0,
+// 		on_finish: function(data) {
+// 			correct_trial = 0
+// 			if (data.key_press == data.correct_response) {
+// 				correct_trial = 1
+// 			}
 			
-			current_block = testCount
+// 			current_block = testCount
 			
-			jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
-											 trial_id: 'test_trial',
-											 current_block: current_block,
-											 current_trial: i
-											 })
-		}
-	};
+// 			jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
+// 											 trial_id: 'test_trial',
+// 											 current_block: current_block,
+// 											 current_trial: i
+// 											 })
+// 		}
+// 	};
 	
-	testTrials.push(test_fixation_block)
-	testTrials.push(test_block)
-}
+// 	testTrials.push(test_fixation_block)
+// 	testTrials.push(test_block)
+// }
 
-var testCount = 0
-var testNode = {
-	timeline: testTrials,
-	loop_function: function(data) {
-		testCount += 1
-		test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
-		current_trial = 0 
+// var testCount = 0
+// var testNode = {
+// 	timeline: testTrials,
+// 	loop_function: function(data) {
+// 		testCount += 1
+// 		test_trials = jsPsych.randomization.repeat(test_stimuli, numTrialsPerBlock / 4, true);
+// 		current_trial = 0 
 	
-		var sum_rt = 0
-		var sum_responses = 0
-		var correct = 0
-		var total_trials = 0
+// 		var sum_rt = 0
+// 		var sum_responses = 0
+// 		var correct = 0
+// 		var total_trials = 0
 	
-		for (var i = 0; i < data.length; i++){
-			if (data[i].trial_id == 'test_trial') {
-				total_trials+=1
-				if (data[i].rt != -1){
-					sum_rt += data[i].rt
-					sum_responses += 1
-					if (data[i].key_press == data[i].correct_response){
-						correct += 1
+// 		for (var i = 0; i < data.length; i++){
+// 			if (data[i].trial_id == 'test_trial') {
+// 				total_trials+=1
+// 				if (data[i].rt != -1){
+// 					sum_rt += data[i].rt
+// 					sum_responses += 1
+// 					if (data[i].key_press == data[i].correct_response){
+// 						correct += 1
 		
-					}
-				}
+// 					}
+// 				}
 		
-			}
+// 			}
 	
-		}
+// 		}
 	
-		var accuracy = correct / total_trials
-		var missed_responses = (total_trials - sum_responses) / total_trials
-		var ave_rt = sum_rt / sum_responses
+// 		var accuracy = correct / total_trials
+// 		var missed_responses = (total_trials - sum_responses) / total_trials
+// 		var ave_rt = sum_rt / sum_responses
 
-		feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break."
-		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
-		if (testCount == numTestBlocks){
-			feedback_text +=
-					'</p><p class = block-text>Done with this test.'
-			return false; } else {
-		if (accuracy < accuracy_thresh){
-			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
-		}
-		if (missed_responses > missed_response_thresh){
-			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond to each shape as quickly and as accurately as possible.'
-		}
+// 		feedback_text = "<br><p class = instruct-text>Please take this time to read your feedback and to take a short break."
+// 		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+// 		if (testCount == numTestBlocks){
+// 			feedback_text +=
+// 					'</p><p class = block-text>Done with this test.'
+// 			return false; } else {
+// 		if (accuracy < accuracy_thresh){
+// 			feedback_text +=
+// 					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
+// 		}
+// 		if (missed_responses > missed_response_thresh){
+// 			feedback_text +=
+// 					'</p><p class = block-text>You have not been responding to some trials.  Please respond to each shape as quickly and as accurately as possible.'
+// 		}
 
-      	if (ave_rt > rt_thresh){
-        	feedback_text += 
-            	'</p><p class = block-text>You have been responding too slowly. Please respond to each shape as quickly and as accurately as possible.'
-      	}
+//       	if (ave_rt > rt_thresh){
+//         	feedback_text += 
+//             	'</p><p class = block-text>You have been responding too slowly. Please respond to each shape as quickly and as accurately as possible.'
+//       	}
 		  
 		
-				return true
-			}
+// 				return true
+// 			}
 		
-	}
-}
+// 	}
+// }
 
 //Set up experiment
 flanker_single_task_network__fmri_experiment = []
@@ -931,10 +949,10 @@ test_keys(flanker_single_task_network__fmri_experiment, [getPossibleResponses()[
 flanker_single_task_network__fmri_experiment.push(refreshNode)
 flanker_single_task_network__fmri_experiment.push(refresh_feedback_block)
 
-cni_bore_setup(flanker_single_task_network__fmri_experiment)
+// cni_bore_setup(flanker_single_task_network__fmri_experiment)
 
-flanker_single_task_network__fmri_experiment.push(testNode0)
-flanker_single_task_network__fmri_experiment.push(testNode)
-flanker_single_task_network__fmri_experiment.push(feedback_block)
+// flanker_single_task_network__fmri_experiment.push(testNode0)
+// flanker_single_task_network__fmri_experiment.push(testNode)
+// flanker_single_task_network__fmri_experiment.push(feedback_block)
 
-flanker_single_task_network__fmri_experiment.push(end_block)
+// flanker_single_task_network__fmri_experiment.push(end_block)

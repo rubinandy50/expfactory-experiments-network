@@ -44,6 +44,9 @@ function getMotorPerm() {
 	return motor_perm
 }
 
+function getKey() {
+	key = getPossibleResponses()[1]
+}
 
 function getPossibleResponses() {
 	if (getMotorPerm()==0) {
@@ -535,7 +538,7 @@ var refresh_feedback_block = {
 	data: {
 		trial_id: getRefreshTrialID
 	},
-	choices: getPossibleResponses[1],
+	choices: getKey,
 	stimulus: getRefreshFeedback,
 	timing_post_trial: 0,
 	is_html: true,
@@ -757,7 +760,7 @@ for (var i = 0; i < refresh_len; i ++){
 	  correct_text: '<div class = centerbox><div class = center-text>Correct!</div></div>',
 	  incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>Incorrect!</font></div></div>', 
 	  timeout_message: getFeedback,
-	  choices: getPossibleResponses[1],
+	  choices: getKey,
 	  timing_response: 2000, //2000
 	  timing_stim: 1000, //1000
 	  timing_feedback_duration: 500,
@@ -859,7 +862,7 @@ for (var i = 0; i < numTrialsPerBlock; i ++){
 		type: 'poldrack-single-stim',
 		stimulus: getStim,
 		is_html: true,
-		choices: getPossibleResponses[1],
+		choices: getPossibleResponses,
 		data: getData,
 		fixation_default: true,
 		timing_post_trial: 0,
@@ -940,8 +943,6 @@ var testNode0 = {
 			}
 		
 			
-			feedback_text +=
-				'</p><p class = block-text>Press Enter to continue.' 
 				block_stims = getTestStimuli(numTrialsPerBlock)
 				return true
 		
@@ -960,7 +961,7 @@ for (var i = 0; i < numTrialsPerBlock; i ++){
 		type: 'poldrack-single-stim',
 		stimulus: getStim,
 		is_html: true,
-		choices: getPossibleResponses[1],
+		choices: getKey,
 		data: getData,
 		fixation_default: true,
 		timing_post_trial: 0,

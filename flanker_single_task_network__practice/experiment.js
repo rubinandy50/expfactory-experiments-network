@@ -66,7 +66,7 @@ function getPossibleResponses() {
 	if (getMotorPerm()==0) {
 		return possible_responses
 	} else if (getMotorPerm()==1) {
-		return [['middle finger', 71],['index finger', 89]]
+		return [['middle finger', 37],['index finger', 39]]
 	}
 }
 
@@ -724,7 +724,7 @@ for (i = 0; i < numTrialsPerBlock; i++) {
 		type: 'poldrack-single-stim',
 		stimulus: function() { return getStimTrials().pop().image }, 
 		is_html: true,
-		choices: [71, 89],
+		choices: [39, 37],
 		data: function() { return getStimTrials_1().pop().data }, 
 		feedback_duration: 0,
 		timing_response: 2000, //2000

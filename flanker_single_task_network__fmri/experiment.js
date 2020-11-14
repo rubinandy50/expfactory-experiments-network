@@ -35,16 +35,15 @@ function updateTrialsWithDesigns(test_stimuli) {
 		flanker_condition = curr_des_events[idx]
 		if (flanker_condition == 'incongruent') {
 			stim = incongruent_trials[Math.floor(Math.random() * incongruent_trials.length)];
-
 		}
 		if (flanker_condition == 'congruent')  { 
-			stim = congruent_trials[Math.floor(Math.random() * congruent_trials.length)]; } 
-			stims.unshift(stim)
+			stim = congruent_trials[Math.floor(Math.random() * congruent_trials.length)];
+		 } 
+			stims.push(stim)
 		}
 
 	return stims
 	}
-
 
 //FUNCTIONS FOR GETTING FMRI SEQUENCES
 function getdesignITIs(design_num) {
@@ -204,9 +203,12 @@ var changeData = function() {
 
 var getRefreshFeedback = function() {
 	if (getRefreshTrialID()=='instructions') {
-		return '<div class = instructbox>'+
+		return '<div class = centerbox>'+
 		"<p class = block-text>In this experiment you will see five letters on the string composed of F's and H's."+
-		'Your task is to respond by pressing the key corresponding to the <i>middle</i> letter.</p>'+
+		'Your task is to respond by pressing the key corresponding to the <b>middle</b> letter.</p>'+
+
+		'<p class = block-text> If the middle letter is F, press the ' + getPossibleResponses()[1][0] + ' button. </p>' + 
+		'<p class = block-text> If the middle letter is H, press the '+  getPossibleResponses()[0][0] + ' button. </p> ' + 
 		'<p class = block-text>After each response you will get feedback about whether you were correct or not. We will start with a short practice set.</p>'+
 		'</div>'
 

@@ -11,7 +11,7 @@ function addID() {
 	  return refresh_trial_id
   }
   
-  function updateTrialTypesWithDesigns() { 
+  function updateTrialTypesWithDesigns(numTrialsPerBlock) { 
   	var new_stims = [] 
 	  
 	  goTrial = {
@@ -23,7 +23,7 @@ function addID() {
 		}
 	}		
 	nogoTrial = { 
-		stimulus: '<div class = bigbox><div class = centerbox><div class = gng_number><div class = cue-text><div  id = ' + stims[0][1] + '></div></div></div></div></div>',
+		stimulus: '<div class = bigbox><div class = centerbox><div class = gng_number><div class = cue-text><div  id = ' + stims[1][1] + '></div></div></div></div></div>',
 		data: {
 			correct_response: getCorrectMapping()[1][1],
 			go_nogo_condition: getCorrectMapping()[1][0],
@@ -31,17 +31,17 @@ function addID() {
 	}
 } 
 
-  	curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
+	  curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
+	  des_events = des_events.slice(numTrialsPerBlock,) // drop them from the array
   	for (var idx = 0; idx < curr_des_events.length; idx++) {
   		nogo_condition = curr_des_events[idx]
   		if (nogo_condition == 'NoGo') {
   			stim = nogoTrial;
-  
   		}
   		if (nogo_condition == 'Go')  { 
   			stim = goTrial;
   		 } 
-  		new_stims.push(stim)
+  		new_stims.unshift(stim)
 		  
   	}
   	return new_stims
@@ -335,7 +335,7 @@ var getCorrectResponse = function(){
 	  }
   }
   practice_stimuli = []
-  //var stims = jsPsych.randomization.shuffle([["orange", "stim1"],["blue","stim2"]])
+  //var  f = jsPsych.randomization.shuffle([["orange", "stim1"],["blue","stim2"]])
   var motor_perm = 0
   var stims = [["solid", "stim1"],["outlined","stim2"]] //solid and outlined squares used as stimuli for this task are not png files as in some others, but they are defined in style.css
   var stim = []
@@ -596,7 +596,7 @@ var getCorrectResponse = function(){
   };
   var end_block = {
 	  type: 'poldrack-text',
-	  timing_response: 180000,
+	  timing_response: 10000,
 	  data: {
 		trial_id: "end",
 	  },
@@ -849,9 +849,7 @@ var getCorrectResponse = function(){
 		  
 		  var total_go_trials = 0
 		  var missed_response = 0
-		  //block_stims = getTestStimuli(numTrialsPerBlock)
 	  
-		  block_stims = updateTrialTypesWithDesigns()
 				  // current_block_des_events = des_events.slice(0,numTrialsPerBlock)
 		  // des_events = des_events.slice(numTrialsPerBlock,)
 		  // block_stims = updateTrialTypesWithDesigns(stims, current_block_des_events)
@@ -896,8 +894,9 @@ var getCorrectResponse = function(){
 						  '</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 			  }
 		  
-  
-		  return false
+		block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
+
+		return false
 		  
 		  }
 	  
@@ -908,7 +907,20 @@ var getCorrectResponse = function(){
   
   var testTrials0 = []
   for (var i = 0; i < numTrialsPerBlock; i ++){
-	  
+
+	var update_global_fixation = {
+		type: 'poldrack-single-stim',
+		stimulus: getGlobal, 
+		is_html: true,
+		choices: [89, 71],
+		data: {
+			trial_id: "update_correct_response",
+		},
+		timing_post_trial: 0,
+		timing_stim: getITI_stim,
+		timing_response: getITI_resp,
+		fixation_default: true
+	};
 	  var test_block = {
 		  type: 'poldrack-single-stim',
 		  stimulus: getStim,
@@ -921,7 +933,7 @@ var getCorrectResponse = function(){
 		  timing_response: 2000, //2000
 		  on_finish: appendData
 	  };
-	  testTrials0.push(fixation_block)
+	  testTrials0.push(update_global_fixation)
 	  testTrials0.push(test_block)
   }
   
@@ -995,7 +1007,7 @@ var getCorrectResponse = function(){
 	  
 		  //test_stimuli_options = getTestStimuli()
 	  
-		  block_stims = getTestStimuli(numTrialsPerBlock)
+		  block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
 		  
 		  trial_id = 'test_trial'
 		  return false
@@ -1009,6 +1021,20 @@ var getCorrectResponse = function(){
   var testTrials = []
   testTrials.push(feedback_block)
   for (var i = 0; i < numTrialsPerBlock; i ++){
+
+	var update_global_fixation = {
+		type: 'poldrack-single-stim',
+		stimulus: getGlobal, 
+		is_html: true,
+		choices: 'none',
+		data: {
+			trial_id: "update_correct_response",
+		},
+		timing_post_trial: 0,
+		timing_stim: getITI_stim,
+		timing_response: getITI_resp,
+		fixation_default: true
+	};
 	  
 	  var test_block = {
 		  type: 'poldrack-single-stim',
@@ -1022,11 +1048,9 @@ var getCorrectResponse = function(){
 		  timing_response: 2000, //2000
 		  on_finish: appendData
 	  };
-	  testTrials.push(fixation_block)
+	  testTrials.push(update_global_fixation)
 	  testTrials.push(test_block)
   }
-  
-  
   
   var testNode = {
 	  timeline: testTrials,
@@ -1091,7 +1115,7 @@ var getCorrectResponse = function(){
 				  feedback_text +=
 						  '</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 			  }
-			  block_stims = getTestStimuli(numTrialsPerBlock)
+			  block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
 			  return true
 		  
 		  }

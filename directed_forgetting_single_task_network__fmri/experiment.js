@@ -206,7 +206,6 @@ var getProbe = function(letters,directed_forgetting_condition,cue) {
 	}
 		
 	return probe
-	//'<div class = bigbox><div class = centerbox><div class = cue-text>' + preFileType + probe + fileTypePNG + '</div></div></div>'
 };
 
 var getCueHTML = function(){
@@ -244,14 +243,10 @@ var getCorrectResponse = function(probeType){
 	}
 }
 
-
-
 var resetTrial = function() {
 	current_trial = 0
 	exp_stage = 'test'
 }
-
-
 
 var createTrialTypes = function (numTrialsPerBlock,numLetters){
 	var probeTypeArray = jsPsych.randomization.repeat(probes, numTrialsPerBlock / probes.length)
@@ -273,15 +268,15 @@ var createTrialTypes = function (numTrialsPerBlock,numLetters){
 			probe: probe,
 			correct_response: correct_response
 			}
-		stims.push(stim)
+		stims.unshift(stim)
 		
 		used_letters = used_letters.concat(letters)	
-	}	
-} else { 
-	curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
-	des_events = des_events.slice(numTrialsPerBlock,)
+		}	
+	} else { 
+	curr_des_events = des_events.slice(0, numTrialsPerBlock)
+	des_events = des_events.slice(numTrialsPerBlock,) //grab this block's event
 	for (var i = 0; i < numTrialsPerBlock; i++){
-		var directed_forgetting_condition = des_events[i]
+		var directed_forgetting_condition = curr_des_events[i]
 		var letters = getTrainingSet(used_letters,numLetters)
 		var cue = getCue()
 		var probe = getProbe(letters,directed_forgetting_condition,cue)
@@ -294,13 +289,11 @@ var createTrialTypes = function (numTrialsPerBlock,numLetters){
 			probe: probe,
 			correct_response: correct_response
 			}
-		stims.push(stim)
+		stims.unshift(stim)
 		
 		used_letters = used_letters.concat(letters)	
-	}	
-}
-		
-		
+			}	
+		}			
 	return stims	
 }
 
@@ -347,9 +340,6 @@ function getChoices() {
 		return choices
 	}
 }
-
-var possible_responses = [['index finger', 89],['middle finger', 71]]
-
 
 function getPossibleResponses() {
 	if (getMotorPerm()==0) {
@@ -417,9 +407,7 @@ function getRefreshResponseEnds() {
 /* Define experimental variables */
 /* ************************************ */
 // generic task variables
-var attention_check_thresh = 0.65
-var sumInstructTime = 0 //ms
-var instructTimeThresh = 0 ///in seconds
+var possible_responses = [['index finger', 89],['middle finger', 71]]
 var credit_var = 0
 
 // task specific variables
@@ -427,8 +415,7 @@ var choices = [89, 71]
 var exp_stage = 'practice'
 var refresh_length = 4 
 var numTrialsPerBlock = 40
-var numTestBlocks = 3
-var practice_thresh = 3 // 3 blocks of 8 trials
+var numTestBlocks = 4
 var accuracy_thresh = 0.75
 var rt_thresh = 1000
 var missed_thresh = 0.10
@@ -450,17 +437,7 @@ var fileType = '.png'
 var fileTypePNG = ".png'></img>"
 var preFileType = "<img class = center src='/static/experiments/directed_forgetting_single_task_network__fmri/images/"
 
-
-var task_boards = [['<div class = bigbox><div class = topLeft><div class = cue-text>'],['</div></div><div class = topMiddle><div class = cue-text>'],['</div></div><div class = topRight><div class = cue-text>'],['</div></div><div class = bottomLeft><div class = cue-text>'],['</div></div><div class = bottomMiddle><div class = cue-text>'],['</div></div><div class = bottomRight><div class = cue-text>'],['</div></div></div>']]
-
-
-
-var prompt_text = '<div class = prompt_box>'+
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Please respond if the probe (single letter) was in the memory set.</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">In memory set: M key</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Not in memory set: Z key</p>' +
-				  '</div>'
-				  
+var task_boards = [['<div class = bigbox><div class = topLeft><div class = cue-text>'],['</div></div><div class = topMiddle><div class = cue-text>'],['</div></div><div class = topRight><div class = cue-text>'],['</div></div><div class = bottomLeft><div class = cue-text>'],['</div></div><div class = bottomMiddle><div class = cue-text>'],['</div></div><div class = bottomRight><div class = cue-text>'],['</div></div></div>']]			  
 				  
 //PRE LOAD IMAGES HERE
 var pathSource = "/static/experiments/directed_forgetting_single_task_network__fmri/images/"
@@ -504,16 +481,6 @@ var end_block = {
 
 var feedback_instruct_text =
 	'Welcome to the experiment.'
-var feedback_instruct_block = {
-	type: 'poldrack-text',
-	data: {
-		trial_id: 'instruction'
-	},
-	cont_key: [32],
-	text: getInstructFeedback,
-	timing_post_trial: 0,
-	timing_response: 180000
-};
 
 var refresh_feedback_block = {
 	type: 'poldrack-single-stim',
@@ -550,7 +517,6 @@ var design_setup_block = {
 		ITIs_stim = des_ITIs.slice(0)
 		ITIs_resp = des_ITIs.slice(0)
 		des_events = await getdesignEvents(design_perm)
-		// des_trial_types = makeDesignTrialTypes(des_events)
 	}
 }
 
@@ -570,41 +536,6 @@ var motor_setup_block = {
 	}
 }
 
-// var instruction_node = {
-// 	timeline: [instructions_block],
-// 	/* This function defines stopping criteria */
-// 	loop_function: function(data) {
-// 		for (i = 0; i < data.length; i++) {
-// 			if ((data[i].trial_type == 'poldrack-instructions') && (data[i].rt != -1)) {
-// 				rt = data[i].rt
-// 				sumInstructTime = sumInstructTime + rt
-// 			}
-// 		}
-// 		if (sumInstructTime <= instructTimeThresh * 1000) {
-// 			feedback_instruct_text =
-// 				'Read through instructions too quickly.  Please take your time and make sure you understand the instructions.  Press <i>enter</i> to continue.'
-// 			return true
-// 		} else if (sumInstructTime > instructTimeThresh * 1000) {
-// 			feedback_instruct_text = 'Done with instructions. Press <i>enter</i> to continue.'
-// 			return false
-// 		}
-// 	}
-// }
-
-var start_practice_block = {
-	type: 'poldrack-instructions',
-	data: {
-		trial_id: 'instruction'
-	},
-	pages: [
-		'<div class = centerbox><p class = block-text>As you saw, there are '+numLetters/2+' letters at the top of the screen and '+numLetters/2+' letters on the bottom of the screen. After a delay, the cue (TOP or BOT) tells you whether to <i>forget</i> the '+numLetters/2+' letters at the top or bottom of the screen, respectively. The other '+numLetters/2+' letters are your memory set.</p><p class = block-text>After the cue, you are shown a letter and respond with the <i> M</i> key if it is in the memory set, and the <i> Z </i> key if it was not in the memory set.</p><p class = block-text>We will now start with a number of practice trials.</p></div>',
-	],
-	allow_keys: false,
-	show_clickable_nav: true,
-	timing_response: 180000,
-	timing_post_trial: 1000
-};
-
 var start_fixation_block = {
 	type: 'poldrack-single-stim',
 	stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
@@ -614,8 +545,8 @@ var start_fixation_block = {
 		trial_id: "fixation"
 	},
 	timing_post_trial: 0,
-	timing_stim: 500, //500
-	timing_response: 500, //500
+	timing_stim: getITI_stim, //500
+	timing_response: getITI_resp, //500
 	on_finish: function() {
 		jsPsych.data.addDataToLastTrial({
 			exp_stage: exp_stage,
@@ -634,7 +565,8 @@ var fixation_block = {
 	},
 	timing_post_trial: 0,
 	timing_stim: 2000, //2000
-	timing_response: 2000, //2000
+	timing_response: 2000, //2000,
+	fixation_default: true,
 	on_finish: function() {
 		jsPsych.data.addDataToLastTrial({
 			exp_stage: exp_stage,
@@ -651,8 +583,10 @@ var ITI_fixation_block = {
 		trial_id: "ITI_fixation"
 	},
 	timing_post_trial: 0,
-	timing_stim: getITI_stim, //1000
-	timing_response: getITI_resp, //1000
+	stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
+	timing_stim: 1000, //1000
+	timing_response: 1000, //1000
+	fixation_default: true,
 	on_finish: function() {
 		jsPsych.data.addDataToLastTrial({
 			exp_stage: exp_stage,
@@ -704,7 +638,9 @@ var probe_block = {
 	timing_stim: 1000, //1000
 	timing_response: 1000, //1000
 	response_ends_trial: false,
-	on_finish: appendProbeData
+	on_finish: appendProbeData,
+	fixation_default: true
+	
 };
 
 var intro_test_block = {
@@ -1053,8 +989,6 @@ for (i = 0; i < (refresh_length); i++) {
 		timing_response: 2000 //2000
 	};
 
-
-
 	var refresh_cue_block = {
 		type: 'poldrack-single-stim',
 		stimulus: getCueHTML,
@@ -1094,17 +1028,13 @@ for (i = 0; i < (refresh_length); i++) {
 	refreshTrials.push(categorize_block);
 }
 
-
 var refreshCount = 0
 var refreshNode = {
 	timeline: refreshTrials,
 	loop_function: function(data){
 		refreshCount += 1
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-		// first_block_des_events = des_events.slice(0,numTrialsPerBlock)
-		// des_events = des_events.slice(numTrialsPerBlock,)
-		// stims = updateTrialTypesWithDesigns(stims, first_block_des_events)
-		
+	
 		var sum_rt = 0
 		var sum_responses = 0
 		var correct = 0
@@ -1168,7 +1098,6 @@ var refreshNode = {
 }
 
 var testTrials0 = []
-//testTrials.push(test_feedback_block)
 for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
 	testTrials0.push(start_fixation_block);
 	testTrials0.push(training_block);
@@ -1183,7 +1112,6 @@ var testNode0 = {
 	timeline: testTrials0,
 	loop_function: function(data) {
 		stims = createTrialTypes(numTrialsPerBlock,numLetters)
-
 		testCount += 1
 		current_trial = 0 
 		
@@ -1262,7 +1190,8 @@ var testNode0 = {
 	      	if (ave_rt > rt_thresh){
 	        	feedback_text += 
 	            	'</p><p class = block-text>You have been responding too slowly.'
-	      	}			
+			  }
+			return false  			
 		
 	}
 
@@ -1366,13 +1295,10 @@ var testNode = {
 				test_feedback_text +=
 						'</p><p class = block-text>Done with this test.'
 				return false
-			}
-		
+		}
 	}
 
 }
-
-
 /* create experiment definition array */
 var directed_forgetting_single_task_network__fmri_experiment = [];
 

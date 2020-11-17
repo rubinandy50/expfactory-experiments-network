@@ -21,15 +21,16 @@ function getGlobal() {
 	return fixation
 }
 
-function updateTrialsWithDesigns(test_stimuli) { 
+function updateTrialsWithDesigns(options) { 
 	var stims = [] 
 	incongruent_trials = [] 
 	congruent_trials = []
-	for (var idx = 0; idx < test_stimuli.length-1; idx++) { 
-		if (test_stimuli[idx].data['flanker_condition'] == 'incongruent')
-			incongruent_trials.push(test_stimuli[idx]) } 
-		if (test_stimuli[idx].data['flanker_condition'] == 'congruent') { 
-			congruent_trials.push(test_stimuli[idx]) } 
+	for (var idx = 0; idx < options.length; idx++) { 
+		if (options[idx].data['flanker_condition'] == 'incongruent') { 
+			incongruent_trials.push(options[idx]) } 
+		if (options[idx].data['flanker_condition'] == 'congruent') { 
+			congruent_trials.push(options[idx]) } 
+		} 
 	curr_des_events = des_events.slice(0, numTrialsPerBlock) // grab this block's designs 
 	des_events = des_events.slice(numTrialsPerBlock, )  // get rid of these designs in the list 
 	for (var idx = 0; idx < curr_des_events.length; idx++) {
@@ -40,7 +41,7 @@ function updateTrialsWithDesigns(test_stimuli) {
 		if (flanker_condition == 'congruent')  { 
 			stim = congruent_trials[Math.floor(Math.random() * congruent_trials.length)];
 		 } 
-			stims.unshift(stim)
+		stims.unshift(stim)
 		}
 
 	return stims
@@ -650,9 +651,10 @@ var refreshNode = {
 		var sum_responses = 0
 		var correct = 0
 		var total_trials = 0
-		test_stimuli = returnStimuliOptions();
-
-		trial_stim = updateTrialsWithDesigns(test_stimuli)
+		options = returnStimuliOptions();
+		//curr_des_events = des_events.slice(0, numTrialsPerBlock) // grab this block's designs 
+	// des_events = des_events.slice(numTrialsPerBlock, )
+		trial_stim = updateTrialsWithDesigns(options)
 		trial_stim_1 = JSON.parse(JSON.stringify(trial_stim))
 
 		for (var i = 0; i < data.length; i++){
@@ -763,9 +765,9 @@ var testNode0 = {
 		var sum_responses = 0
 		var correct = 0
 		var total_trials = 0
-		test_stimuli = returnStimuliOptions();
+		options = returnStimuliOptions();
 
-		trial_stim = updateTrialsWithDesigns(test_stimuli)
+		trial_stim = updateTrialsWithDesigns(options)
 		trial_stim_1 = JSON.parse(JSON.stringify(trial_stim))
 		for (var i = 0; i < data.length; i++){
 			if (data[i].trial_id == 'test_trial') {
@@ -870,9 +872,9 @@ var testNode = {
 		var sum_responses = 0
 		var correct = 0
 		var total_trials = 0
-		test_stimuli = returnStimuliOptions();
+		options = returnStimuliOptions();
 
-		trial_stim = updateTrialsWithDesigns(test_stimuli)
+		trial_stim = updateTrialsWithDesigns(options)
 		trial_stim_1 = JSON.parse(JSON.stringify(trial_stim))
 		for (var i = 0; i < data.length; i++){
 			if (data[i].trial_id == 'test_trial') {

@@ -78,7 +78,7 @@ function addID() {
 //Functions added for in-person sessions
 
 function popRefreshAnswer() { 
-	return practice_response_array.shift()
+	return practice_response_array.pop()
 
 }
 function genITIs() { 
@@ -239,6 +239,7 @@ function getPromptTextList() {
 }
 
 function getCorrectResponse(center_letter) { 
+	correct_response = 0
 	if (center_letter == 'F') { 
 		correct_response = getPossibleResponses()[1][1] 
 	}
@@ -332,8 +333,8 @@ var preFileType = '<img class = center src="/static/experiments/flanker_single_t
 var flanker_boards = [['<div class = bigbox><div class = centerbox><div class = flankerLeft_2><div class = cue-text>'],['</div></div><div class = flankerLeft_1><div class = cue-text>'],['</div></div><div class = flankerMiddle><div class = cue-text>'],['</div></div><div class = flankerRight_1><div class = cue-text>'],['</div></div><div class = flankerRight_2><div class = cue-text>'],['</div></div></div></div>']]					   
 
 var practice_len = 4 // must be divisible by 4
-var exp_len = 144 // must be divisible by 4, 100 in original
-var numTrialsPerBlock = 36 //must be divisible by 4
+var exp_len = 8 // must be divisible by 4, 100 in original
+var numTrialsPerBlock = 4 //must be divisible by 4
 var numTestBlocks = exp_len / numTrialsPerBlock
 
 //var practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
@@ -580,9 +581,9 @@ var motor_setup_block = {
 	], on_finish: function(data) {
 		motor_perm=parseInt(data.responses.slice(7, 10))
 		options = returnStimuliOptions();
-		trial_stim = jsPsych.randomization.repeat(options, numTrialsPerBlock / 4, true);
+		trial_stim = jsPsych.randomization.repeat(options, practice_len / 4, true);
 
-		//trial_stim = Object.assign({}, trial_stim);
+		trial_stim_1 = JSON.parse(JSON.stringify(trial_stim))
 
 		for (i = 0; i < trial_stim.data.length; i++) {
 			practice_response_array.push(trial_stim.data[i].correct_response)
@@ -725,10 +726,10 @@ for (i = 0; i < numTrialsPerBlock; i++) {
 
 	var test_block = {
 		type: 'poldrack-single-stim',
-		stimulus: function() { return getStimTrials().pop().image }, 
+		stimulus: function() { return getStimTrials().shift().image }, 
 		is_html: true,
 		choices: [71, 89],
-		data: function() { return getStimTrials_1().pop().data }, 
+		data: function() { return getStimTrials_1().shift().data }, 
 		feedback_duration: 0,
 		timing_response: 2000, //2000
 		timing_stim: 1000, //1000
@@ -928,7 +929,7 @@ flanker_single_task_network__fmri_experiment = []
 
 flanker_single_task_network__fmri_experiment.push(design_setup_block)
 flanker_single_task_network__fmri_experiment.push(motor_setup_block)
-test_keys(flanker_single_task_network__fmri_experiment, [getPossibleResponses()[0][1], getPossibleResponses()[1][1]])
+test_keys(flanker_single_task_network__fmri_experiment, [89, 71])
 
 
 flanker_single_task_network__fmri_experiment.push(refreshNode)

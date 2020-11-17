@@ -30,7 +30,8 @@ function updateTrialsWithDesigns(test_stimuli) {
 			incongruent_trials.push(test_stimuli[idx]) } 
 		if (test_stimuli[idx].data['flanker_condition'] == 'congruent') { 
 			congruent_trials.push(test_stimuli[idx]) } 
-	curr_des_events = des_events.slice(0, numTrialsPerBlock) //grab this block's event
+	curr_des_events = des_events.slice(0, numTrialsPerBlock) // grab this block's designs 
+	des_events = des_events.slice(numTrialsPerBlock, )  // get rid of these designs in the list 
 	for (var idx = 0; idx < curr_des_events.length; idx++) {
 		flanker_condition = curr_des_events[idx]
 		if (flanker_condition == 'incongruent') {
@@ -39,7 +40,7 @@ function updateTrialsWithDesigns(test_stimuli) {
 		if (flanker_condition == 'congruent')  { 
 			stim = congruent_trials[Math.floor(Math.random() * congruent_trials.length)];
 		 } 
-			stims.push(stim)
+			stims.unshift(stim)
 		}
 
 	return stims

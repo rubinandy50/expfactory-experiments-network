@@ -41,7 +41,7 @@ function updateTrialsWithDesigns(options) {
 		if (flanker_condition == 'congruent')  { 
 			stim = congruent_trials[Math.floor(Math.random() * congruent_trials.length)];
 		 } 
-		stims.unshift(stim)
+		stims.push(stim)
 		}
 
 	return stims
@@ -78,7 +78,7 @@ function addID() {
 //Functions added for in-person sessions
 
 function popRefreshAnswer() { 
-	return practice_response_array.pop()
+	return practice_response_array.shift()
 
 }
 function genITIs() { 
@@ -333,8 +333,8 @@ var preFileType = '<img class = center src="/static/experiments/flanker_single_t
 var flanker_boards = [['<div class = bigbox><div class = centerbox><div class = flankerLeft_2><div class = cue-text>'],['</div></div><div class = flankerLeft_1><div class = cue-text>'],['</div></div><div class = flankerMiddle><div class = cue-text>'],['</div></div><div class = flankerRight_1><div class = cue-text>'],['</div></div><div class = flankerRight_2><div class = cue-text>'],['</div></div></div></div>']]					   
 
 var practice_len = 4 // must be divisible by 4
-var exp_len = 8 // must be divisible by 4, 100 in original
-var numTrialsPerBlock = 4 //must be divisible by 4
+var exp_len = 144 // must be divisible by 4, 100 in original
+var numTrialsPerBlock = 36 //must be divisible by 4
 var numTestBlocks = exp_len / numTrialsPerBlock
 
 //var practice_trials = jsPsych.randomization.repeat(test_stimuli, practice_len / 4, true);
@@ -495,59 +495,7 @@ var feedback_block = {
 /* ************************************ */
 var des_ITIs = []
 var des_events = [] 
-// var practiceTrials = []
-// practiceTrials.push(feedback_block)
-// practiceTrials.push(instructions_block)
-// for (i = 0; i < practice_len; i++) {
-// 	var practice_fixation_block = {
-// 		type: 'poldrack-single-stim',
-// 		stimulus: '<div class = centerbox><div class = fixation>+</div></div>',
-// 		is_html: true,
-// 		data: {
-// 			trial_id: "practice_fixation"
-// 		},
-// 		choices: 'none',
-// 		timing_stim: 500, //500 
-// 		timing_response: 500, //500
-// 		timing_post_trial: 0,
-// 		on_finish: changeData,
-// 		prompt: prompt_text
-// 	};
-// 	var practice_block = {
-// 		type: 'poldrack-categorize',
-// 		stimulus: practice_trials.image[i],
-// 		is_html: true,
-// 		key_answer: practice_response_array[i],
-// 		correct_text: '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text,
-// 		incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + prompt_text,
-// 		timeout_message: '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + prompt_text,
-// 		choices: [70, 72],
-// 		data: practice_trials.data[i],
-// 		timing_feedback_duration: 500, //500
-// 		timing_stim: 1000, //1000
-// 		show_stim_with_feedback: false,
-// 		response_ends_trial: false,
-// 		timing_response: 2000, //2000
-// 		timing_post_trial: 0,
-// 		prompt: prompt_text,
-// 		on_finish: function(data) {
-// 			correct_trial = 0
-// 			if (data.key_press == data.correct_response) {
-// 				correct_trial = 1
-// 			}
-// 			current_block = practiceCount
-		
-// 			jsPsych.data.addDataToLastTrial({correct_trial: correct_trial,
-// 											 trial_id: 'practice_trial',
-// 											 current_block: current_block,
-// 											 current_trial: i
-// 											 })
-// 		}
-// 	}
-	
-// 	practiceTrials.push(practice_fixation_block)
-// 	practiceTrials.push(practice_block)
-// }
+
 
 var design_setup_block = {
 	type: 'survey-text',
@@ -595,19 +543,7 @@ var practiceCount = 0
 var refreshTrials = []
 refreshTrials.push(refresh_feedback_block)
 for (i = 0; i < practice_len; i++) {
-	// var update_global_fixation = {
-	// 	type: 'poldrack-single-stim',
-	// 	stimulus: getGlobal, 
-	// 	is_html: true,
-	// 	choices: 'none',
-	// 	data: {
-	// 		trial_id: "update_correct_response",
-	// 	},
-	// 	timing_post_trial: 0,
-	// 	timing_stim: 1,
-	// 	timing_response: 1,
-	// 	prompt: getPromptTextList
-	// };
+
 	var refresh_block = {
 		type: 'poldrack-categorize',
 		stimulus: function() { return getStimTrials().image.shift() }, 	
@@ -832,10 +768,10 @@ for (i = 0; i < numTrialsPerBlock; i++) {
 	
 	var test_block = {
 		type: 'poldrack-single-stim',
-		stimulus: function() { return getStimTrials().pop().image }, 
+		stimulus: function() { return getStimTrials().shift().image }, 
 		is_html: true,
 		choices: [71, 89],
-		data: function() { return getStimTrials_1().pop().data }, 
+		data: function() { return getStimTrials_1().shift().data }, 
 		feedback_duration: 0,
 		timing_response: 2000, //2000
 		timing_stim: 1000, //1000

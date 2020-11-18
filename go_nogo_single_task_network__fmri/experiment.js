@@ -344,7 +344,7 @@ var getCorrectResponse = function(){
   var refresh_feedback_timing = -1
   var refresh_response_ends = true
   var current_trial = 0
-  var practice_length = 8
+  var practice_length = 6
   
   function createPracticeTrials(practice_length) { 
    var practice_stimuli = [{ //To change go:nogo ratio, add or remove one or more sub-dictionaries within practice_stimuli and test_stimuli_block
@@ -535,47 +535,7 @@ var getCorrectResponse = function(){
 	timing_post_trial: 0,
 	timing_response: 180000
   };
-  // /// This ensures that the subject does not read through the instructions too quickly.  If they do it too quickly, then we will go over the loop again.
-  // var instructions_block = {
-  //   type: 'poldrack-text',
-  //   data: {
-  //     trial_id: "instruction"
-  //   },
-  //   simulus: 
-  //     '<div class = centerbox>'+
-  // 	    '<p class = block-text>In this experiment, ' + stims[0][0] + ' and ' + stims[1][0] + ' squares will appear on the screen. '+
-  // 	    'If you see the ' + stims[0][0] + ' square you should <b> respond by pressing the spacebar as quickly as possible</i>. '+
-  // 	    'If you see the ' + stims[1][0] + ' square you should <b> not respond</i>.</p>'+
-  // 	    '<p class = block-text>We will begin with practice. You will receive feedback telling you if you were correct.</p>'+
-  // 		'<p class = block-text> Press any button when you are ready to begin </p>' +	'</div>'
-  //   ,
-  //   allow_keys: false,
-  //   show_clickable_nav: true,
-  //   timing_post_trial: 1000
-  // };
-  
-  // var instruction_node = {
-  //   timeline: [feedback_instruct_block, instructions_block],
-  //   /* This function defines stopping criteria */
-  //   loop_function: function(data) {
-  //     for (i = 0; i < data.length; i++) {
-  //       if ((data[i].trial_type == 'poldrack-instructions') && (data[i].rt != -1)) {
-  //         rt = data[i].rt
-  //         sumInstructTime = sumInstructTime + rt
-  //       }
-  //     }
-  //     if (sumInstructTime <= instructTimeThresh * 1000) {
-  //       feedback_instruct_text =
-  //         'Read through instructions too quickly.  Please take your time and make sure you understand the instructions.  Press <b>enter</i> to continue.'
-  //       return true
-  //     } else if (sumInstructTime > instructTimeThresh * 1000) {
-  //       feedback_instruct_text =
-  //         'Done with instructions.'
-  //       return false
-  //     }
-  //   }
-  // }
-  
+
   var refresh_feedback_block = {
 	  type: 'poldrack-single-stim',
 	  data: {
@@ -681,116 +641,6 @@ var getCorrectResponse = function(){
 	  prompt: prompt_text_list
   };
   
-  // var practiceTrials = []
-  // practiceTrials.push(feedback_block)
-  // practiceTrials.push(instructions_block)
-  // for (var i = 0; i < practice_len; i ++){
-  
-  // 	var practice_block = {
-  // 	  type: 'poldrack-categorize',
-  // 	  stimulus: getStim,
-  // 	  is_html: true,
-  // 	  data: getData,
-  // 	  key_answer: getCorrectResponse,
-  // 	  correct_text: '<div class = centerbox><div class = center-text>Correct!</div></div>',
-  // 	  incorrect_text: '<div class = centerbox><div class = center-text>The shape was outlined</div></div>',
-  // 	  timeout_message: getFeedback,
-  // 	  choices: [32],
-  // 	  timing_response: 2000, //2000
-  // 	  timing_stim: 1000, //1000
-  // 	  timing_feedback_duration: 500,
-  // 	  show_stim_with_feedback: false,
-  // 	  timing_post_trial: 0,
-  // 	  on_finish: appendData,
-  // 	  prompt: prompt_text_list
-  // 	}
-	  
-  // 	practiceTrials.push(prompt_fixation_block)
-  // 	practiceTrials.push(practice_block)
-  // }
-  
-  // var practiceCount = 0
-  // var practiceNode = {
-  // 	timeline: practiceTrials,
-  // 	loop_function: function(data){
-  // 		practiceCount += 1
-  // 		current_trial = 0
-  // 		block_stims = jsPsych.randomization.repeat(practice_stimuli, practice_len / practice_stimuli.length); 
-	  
-  // 		var sum_rt = 0
-  // 		var sum_responses = 0
-  // 		var correct = 0
-  // 		var total_trials = 0
-		  
-  // 		var total_go_trials = 0
-  // 		var missed_response = 0
-	  
-  // 		for (var i = 0; i < data.length; i++){
-  // 			if (data[i].trial_id == "practice_trial"){
-  // 				total_trials+=1
-  // 				if (data[i].rt != -1){
-  // 					sum_rt += data[i].rt
-  // 					sum_responses += 1
-  // 				}
-  // 				if (data[i].key_press == data[i].correct_response){
-  // 					correct += 1
-	  
-  // 				}
-				  
-  // 				if (data[i].go_nogo_condition == 'go'){
-  // 					total_go_trials += 1
-  // 					if (data[i].rt == -1){
-  // 						missed_response += 1
-  // 					}
-  // 				}
-				  
-  // 			}
-  // 		}
-	  
-  // 		var accuracy = correct / total_trials
-  // 		var missed_responses = missed_response / total_go_trials
-  // 		var ave_rt = sum_rt / sum_responses
-	  
-  // 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
-  
-  // 		if (accuracy > accuracy_thresh){
-  // 			feedback_text +=
-  // 					'</p><p class = block-text>Done with this practice. Press Enter to continue.' 
-  // 			block_stims = jsPsych.randomization.repeat(test_stimuli_block, numTrialsPerBlock / test_stimuli_block.length);
-  // 			return false
-	  
-  // 		} else if (accuracy < accuracy_thresh){
-  // 			feedback_text +=
-  // 					'</p><p class = block-text>We are going to try practice again to see if you can achieve higher accuracy.  Remember: <br>' + prompt_text_list
-					  
-  // 			if (missed_responses > missed_thresh){
-  // 				feedback_text +=
-  // 						'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
-  // 			}
-  
-  // 	      	if (ave_rt > rt_thresh){
-  // 	        	feedback_text += 
-  // 	            	'</p><p class = block-text>You have been responding too slowly.'
-  // 	      	}
-		  
-  // 			if (practiceCount == practice_thresh){
-  // 				feedback_text +=
-  // 					'</p><p class = block-text>Done with this practice.' 
-  // 					block_stims = jsPsych.randomization.repeat(test_stimuli_block, numTrialsPerBlock / test_stimuli_block.length);
-  // 					return false
-  // 			}
-			  
-  // 			feedback_text +=
-  // 				'</p><p class = block-text>Redoing this practice. Press Enter to continue.' 
-			  
-  // 			return true
-		  
-  // 		}
-	  
-  // 	}
-	  
-  // }
-  
   
   var refreshTrials = []
   refreshTrials.push(refresh_feedback_block)
@@ -850,10 +700,6 @@ var getCorrectResponse = function(){
 		  var total_go_trials = 0
 		  var missed_response = 0
 	  
-				  // current_block_des_events = des_events.slice(0,numTrialsPerBlock)
-		  // des_events = des_events.slice(numTrialsPerBlock,)
-		  // block_stims = updateTrialTypesWithDesigns(stims, current_block_des_events)
-		  
 		  for (var i = 0; i < data.length; i++){
 			  if (data[i].trial_id == "practice_trial"){
 				  total_trials+=1
@@ -978,17 +824,9 @@ var getCorrectResponse = function(){
 		  var missed_responses = missed_response / total_go_trials
 		  var ave_rt = sum_rt / sum_responses
 	  
-		  feedback_text = "<br>Done with this test. Please take this time to read your feedback and to take a short break! Press enter to continue"
+		  feedback_text = "Please take this time to read your feedback and to take a short break!"
 		  feedback_text += "</p><p class = block-text>You have completed " +testCount+ " out of " +numTestBlocks+ " blocks of trials."
-  
-		  // if (testCount >= numTestBlocks){
-			  
-		  // 	feedback_text +=
-		  // 			'</p><p class = block-text>Done with this test. Press Enter to continue.<br> '+
-		  // 			'If you have been completing tasks continuously for an hour or more, please take a 15-minute break before starting again.' 
-		  // 	return false
-	  
-		  // } else {
+
 		  if (accuracy < accuracy_thresh){
 		  feedback_text +=
 				  '</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text_list
@@ -1005,14 +843,12 @@ var getCorrectResponse = function(){
 					  '</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		  }
 	  
-		  //test_stimuli_options = getTestStimuli()
 	  
 		  block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
 		  
 		  trial_id = 'test_trial'
 		  return false
 		  
-		  // }
 	  
 	  }
 	  
@@ -1064,8 +900,9 @@ var getCorrectResponse = function(){
 		  var total_trials = 0
 		  var total_go_trials = 0
 		  var missed_response = 0
-		  
-	  
+
+		  block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
+
 		  for (var i = 0; i < data.length; i++){
 			  if (data[i].trial_id == "test_trial"){
 				  total_trials+=1
@@ -1115,7 +952,6 @@ var getCorrectResponse = function(){
 				  feedback_text +=
 						  '</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 			  }
-			  block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
 			  return true
 		  
 		  }

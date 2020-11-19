@@ -728,23 +728,21 @@ var getCorrectResponse = function(){
 	  
 		  feedback_text = "<br>Please take this time to read your feedback and to take a short break! "
   
-		  if (accuracy > accuracy_thresh){
-			  return false
-	  
-		  } else if (accuracy < accuracy_thresh){
+		  if (accuracy < accuracy_thresh){
 			  feedback_text +=
 					  '</p><p class = block-text>We are going to try practice again to see if you can achieve higher accuracy.  Remember: <br>' + prompt_text_list
+		  }
 					  
-			  if (missed_responses > missed_thresh){
+		  if (missed_responses > missed_thresh){
 				  feedback_text +=
 						  '</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
-			  }
-		  
-		block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
-
-		return false
-		  
 		  }
+		  
+		  block_stims = updateTrialTypesWithDesigns(numTrialsPerBlock)
+
+		  return false
+		  
+		  
 	  
 	  }
 	  

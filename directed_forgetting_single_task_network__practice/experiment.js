@@ -36,8 +36,8 @@ function assessPerformance() {
 	//record choices participants made
 	var choice_counts = {}
 	choice_counts[-1] = 0
-	choice_counts[89] = 0
-	choice_counts[71] = 0
+	choice_counts[37] = 0
+	choice_counts[39] = 0
 	for (var k = 0; k < choices.length; k++) {
 		choice_counts[choices[k]] = 0
 	}
@@ -330,14 +330,14 @@ function getChoices() {
 	}
 }
 
-var possible_responses = [['index finger', 89],['middle finger', 71]]
+var possible_responses = [['index finger', 37],['middle finger', 39]]
 
 
 function getPossibleResponses() {
 	if (getMotorPerm()==0) {
 		return possible_responses
 	} else if (getMotorPerm()==1) {
-		return [['middle finger', 71],['index finger', 89]]
+		return [['middle finger', 39],['index finger', 37]]
 	}
 }
 

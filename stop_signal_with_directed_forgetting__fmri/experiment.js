@@ -123,18 +123,15 @@ var getFeedback = function() {
 var getRefreshFeedback = function() {
 	if (getRefreshTrialID()=='instructions') {
 		return '<div class = bigbox><div class = picture_box><p class = instruct-text><font color="white"><div class = instructbox>'+
-		'<p class = instruct-text>In this experiment you will be presented with '+numLetters+' letters on each trial. There will be '+numLetters/2+' at the top and '+numLetters/2+' on the bottom. You must memorize all '+numLetters+' letters.</p> '+
-		'<p class = instruct-text>There will be a short delay, then you will see a cue, either <i>TOP</i> or <i>BOT</i>. '+
+		'<p class = instruct-text>In this experiment you will be presented with '+numLetters+' letters on each trial. You must memorize all '+numLetters+' letters.</p> '+
+		'<p class = instruct-text>After a short delay, you will see a cue, either <i>TOP</i> or <i>BOT</i>. '+
 		'This will instruct you to <i>FORGET</i> the '+numLetters/2+' letters located at either the top or bottom (respectively) of the screen.</p>'+
 		'<p class = instruct-text>The '+numLetters/2+' remaining letters that you must remember are called your <i>MEMORY SET</i>. Please forget the letters not in the memory set.</p>'+
-		'<p class = instruct-text>So for example, if you get the cue TOP, please <i>forget the top '+numLetters/2+' letters</i> and remember the bottom '+numLetters/2+' letters. <i>The bottom '+numLetters/2+' letters would be your MEMORY SET.</i></p>'+
-		'<p class = instruct-text>After a short delay, you will be presented with a probe — a single letter.  Please indicate whether this probe was in your memory set.</p>'+
-		'<p class = instruct-text>Press the <i>'+getPossibleResponses()[0][0]+
+		'<p class = instruct-text>After a short delay, you will be presented with a probe — a single letter. Press the <i>'+getPossibleResponses()[0][0]+
 		' </i>if the probe was in the memory set, and the <i>'+getPossibleResponses()[1][0]+'  </i>if not.</p>'+
-		'<p class = instruct-text>On some trials, a star will appear around the probe.  The star will appear with, or shortly after the probe appears.</p>'+
-		'<p class = instruct-text>If you see a star appear, please try your best to make no response on that trial.</p>'+
-		'<p class = instruct-text>If the star appears on a trial, and you try your best to withhold your response, you will find that you will be able to stop sometimes but not always.</p>'+
-		'<p class = instruct-text>Please do not slow down your response to the probe in order to wait for the star.  Continue to respond as quickly and accurately as possible.</p>'+
+		'<p class = instruct-text>On some trials, a star will appear around the probe, either with, or shortly after the probe appears.'+
+		' If you see a star appear, please try your best to make no response on that trial.</p>'+
+		'<p class = instruct-text>You will find that you will be able to stop sometimes but not always. Please do not slow down your response to the probe in order to wait for the star. Continue to respond as quickly and accurately as possible.</p>'+
 		'<p class = instruct-text>During practice, you will see a reminder of the rules.  <i> This will be removed for the test</i>. </p>'+ 
 		'<p class = instruct-text>To let the experimenters know when you are ready to begin, please press any button. </p>'+
 		'</div>' + '</font></p></div></div>'
@@ -159,29 +156,29 @@ var getRefreshResponseEnds = function() {
 
 
 var getCategorizeFeedback = function(){
-	curr_trial = jsPsych.progress().current_trial_global - 2
+	curr_trial = jsPsych.progress().current_trial_global - 1
 	trial_id = jsPsych.data.getDataByTrialIndex(curr_trial).trial_id
 	if ((trial_id == 'practice_trial') && (jsPsych.data.getDataByTrialIndex(curr_trial).stop_signal_condition != 'stop')){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == jsPsych.data.getDataByTrialIndex(curr_trial).correct_response){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptText()
 		} else if ((jsPsych.data.getDataByTrialIndex(curr_trial).key_press != jsPsych.data.getDataByTrialIndex(curr_trial).correct_response) && (jsPsych.data.getDataByTrialIndex(curr_trial).key_press != -1)){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + getPromptText()
 	
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == -1){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + getPromptText()
 	
 		}
 	} else if ((trial_id == 'practice_trial') && (jsPsych.data.getDataByTrialIndex(curr_trial).stop_signal_condition == 'stop')){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).rt == -1){
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptText()
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).rt != -1){
-			return '<div class = fb_box><div class = center-text><font size = 20>There was a star.</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>There was a star.</font></div></div>' + getPromptText()
 		}
 	}
 }
@@ -481,20 +478,37 @@ var stop_signal_boards = ['<div class = bigbox><div class = starbox>','</div></d
 
 // var stims = createTrialTypes(practice_len)
 
+var getPromptText = function(){
+	return '<div class = prompt_box>'+
+	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">Please respond if the probe was in the memory set.</p>' +
+	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">In memory set: ' + getPossibleResponses()[0][0] + '</p>' +
+	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">Not in memory set: ' + getPossibleResponses()[1][0] + '</p>' +
+	'<p class = center-block-text style = "font-size:16px; line-height:80%%;">Do not respond if a star appears around the probe!</p>' +
+	'</div>'
+}
 
-var prompt_text_list = '<ul style = "text-align:left">'+
-						'<li>Please respond if the probe was in the memory set.</li>'+
-						'<li>In memory set: ' + getPossibleResponses()[0][0] + '</li>' +
-						'<li>Not in memory set: ' + getPossibleResponses()[1][0] + '</li>' +
-						'<li>Do not respond if a star appears around the probe!</li>' +
-					   '</ul>'
+var getPromptTextList = function(){
+	return '<ul style = "text-align:left">'+
+			'<li>Please respond if the probe was in the memory set.</li>'+
+			'<li>In memory set: ' + getPossibleResponses()[0][0] + '</li>' +
+			'<li>Not in memory set: ' + getPossibleResponses()[1][0] + '</li>' +
+			'<li>Do not respond if a star appears around the probe!</li>' +
+			'</ul>'
+}
 
-var prompt_text = '<div class = prompt_box>'+
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Please respond if the probe was in the memory set.</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">In memory set: ' + getPossibleResponses()[0][0] + '</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Not in memory set: ' + getPossibleResponses()[1][0] + '</p>' +
-					  '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Do not respond if a star appears around the probe!</p>' +
-				  '</div>'
+// var prompt_text_list = '<ul style = "text-align:left">'+
+// 						'<li>Please respond if the probe was in the memory set.</li>'+
+// 						'<li>In memory set: ' + getPossibleResponses()[0][0] + '</li>' +
+// 						'<li>Not in memory set: ' + getPossibleResponses()[1][0] + '</li>' +
+// 						'<li>Do not respond if a star appears around the probe!</li>' +
+// 					   '</ul>'
+
+// var prompt_text = '<div class = prompt_box>'+
+// '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Please respond if the probe was in the memory set.</p>' +
+// '<p class = center-block-text style = "font-size:16px; line-height:80%%;">In memory set: ' + getPossibleResponses()[0][0] + '</p>' +
+// '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Not in memory set: ' + getPossibleResponses()[1][0] + '</p>' +
+// '<p class = center-block-text style = "font-size:16px; line-height:80%%;">Do not respond if a star appears around the probe!</p>' +
+// '</div>'
 				  
 var pathSource = "/static/experiments/stop_signal_with_directed_forgetting__fmri/images/"
 var pathDesignSource = "/static/experiments/stop_signal_with_directed_forgetting__fmri/designs/" //ADDED FOR fMRI SEQUENCES
@@ -984,7 +998,7 @@ var refresh_start_fixation_block = {
 	timing_post_trial: 0,
 	timing_stim: 500, //500
 	timing_response: 500, //500
-	prompt: prompt_text,
+	prompt: getPromptText,
 	on_finish: function(){
 		stim = getNextStim()
 	}
@@ -999,7 +1013,7 @@ var refresh_fixation_block = {
 		trial_id: "practice_fixation"
 	},
 	timing_post_trial: 0,
-	prompt: prompt_text,
+	prompt: getPromptText,
 	timing_stim: 2000, //2000
 	timing_response: 2000 //2000
 }
@@ -1012,9 +1026,12 @@ var refresh_ITI_fixation_block = {
 		trial_id: "practice_ITI_fixation"
 	},
 	timing_post_trial: 0,
-	prompt: prompt_text,
-	timing_stim: 1000, //1000
-	timing_response: 1000 //1000
+	prompt: getPromptText,
+	timing_stim: 500, //1000
+	timing_response: 500, //1000
+	on_finish: function(){
+		stim = getNextStim()
+	}
 }
 
 var refresh_cue_directed_block = {
@@ -1028,7 +1045,7 @@ var refresh_cue_directed_block = {
 	timing_post_trial: 0,
 	timing_stim: 1000, //1000
 	timing_response: 1000, //1000
-	prompt: prompt_text,
+	prompt: getPromptText,
 };
 
 
@@ -1041,7 +1058,7 @@ var refresh_training_block = {
 	},
 	choices: 'none',
 	timing_post_trial: 0,
-	prompt: prompt_text,
+	prompt: getPromptText,
 	timing_stim: 2000, //2000
 	timing_response: 2000 //2000
 };
@@ -1058,13 +1075,14 @@ var refresh_probe_block = {
 	is_html: true,
 	choices: [possible_responses[0][1],possible_responses[1][1]],
 	timing_stim: 1000,
-	timing_response: 1000, //2000
+	timing_response: 2000, //2000
 	response_ends_trial: false,
 	SSD: getSSD,
 	timing_SS: 500, //500
 	timing_post_trial: 0,
 	on_finish: appendData,
-	prompt: prompt_text,
+	prompt: getPromptText,
+	fixation_default: true,
 	on_start: function(){
 		stoppingTracker = []
 		stoppingTimeTracker = []
@@ -1087,12 +1105,11 @@ var categorize_block = {
   };
 
 for (i = 0; i < refresh_len; i++) { 
-	refreshTrials.push(refresh_start_fixation_block)
+	refreshTrials.push(refresh_ITI_fixation_block)
 	refreshTrials.push(refresh_training_block)
 	refreshTrials.push(refresh_cue_directed_block)
 	refreshTrials.push(refresh_fixation_block)
 	refreshTrials.push(refresh_probe_block)
-	refreshTrials.push(refresh_ITI_fixation_block)
 	refreshTrials.push(categorize_block)
 }
 
@@ -1158,7 +1175,7 @@ var refreshNode = {
 	
 		if (accuracy < accuracy_thresh) {
 			feedback_text +=
-					'</p><p class = block-text>Remember: <br>' + prompt_text_list
+					'</p><p class = block-text>Remember: <br>' + getPromptTextList()
 		}
 				
 		if (missed_responses > missed_thresh){
@@ -1179,8 +1196,7 @@ var refreshNode = {
 		
 		if (stop_correct === minStopCorrectPractice){
 			feedback_text +=
-			'</p><p class = block-text>You have not been stopping your response when stars are present.  Please try your best to stop your response if you see a star.'
-		
+			'</p><p class = block-text>You have not been stopping your response when stars are present. Please try your best to stop your response if you see a star.'
 		}
 		
 		
@@ -1265,7 +1281,7 @@ var testNode0 = {
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text_list
+					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
 		}
 		
 		if (missed_responses > missed_thresh){
@@ -1304,7 +1320,6 @@ for (i = 0; i < numTrialsPerBlock; i++) {
 	testTrials.push(fixation_block) //2000
 	testTrials.push(test_probe_block) // 2000ms; timing_stim= 1000, timing_SS= 500, SSD: getSSD
 }
-
 
 var testNode = {
 	timeline: testTrials,
@@ -1366,7 +1381,7 @@ var testNode = {
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text_list
+					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
 		}
 		
 		if (missed_responses > missed_thresh){

@@ -47,6 +47,16 @@ var getChoices = function() {
 	return [getPossibleResponses()[0][1], getPossibleResponses()[1][1]]
 }
 
+var getPromptText = function(){
+	return '<ul style = "text-align:left;"><font color=white>'+
+			'<li>Indicate the identity of the middle letter</li>' +
+			'<li>If the middle letter is H: '+getPossibleResponses()[0][0]+'.</li>'+
+		    '<li>If the middle letter is F, press your '+getPossibleResponses()[1][0]+'.</li>'+
+			'<li>Do not respond if you see a star around the letters!</li>' +
+			'<li>Do not slow down your responses to the letter to wait for the star.</li>' +
+			'</font></ul>'
+}
+
 
 function addID() {
   jsPsych.data.addDataToLastTrial({exp_id: 'stop_signal_with_flanker__practice'})
@@ -164,23 +174,23 @@ var getCategorizeFeedback = function(){
 	if ((trial_id == 'practice_trial') && (jsPsych.data.getDataByTrialIndex(curr_trial).stop_signal_condition != 'stop')){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == jsPsych.data.getDataByTrialIndex(curr_trial).correct_response){
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptText()
 		} else if ((jsPsych.data.getDataByTrialIndex(curr_trial).key_press != jsPsych.data.getDataByTrialIndex(curr_trial).correct_response) && (jsPsych.data.getDataByTrialIndex(curr_trial).key_press != -1)){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + getPromptText()
 	
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == -1){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + getPromptText()
 	
 		}
 	} else if ((trial_id == 'practice_trial') && (jsPsych.data.getDataByTrialIndex(curr_trial).stop_signal_condition == 'stop')){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).rt == -1){
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptText()
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).rt != -1){
-			return '<div class = fb_box><div class = center-text><font size = 20>There was a star.</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>There was a star.</font></div></div>' + getPromptText()
 		}
 	}
 }
@@ -237,6 +247,14 @@ function getSSD(){
 	} else if (flanker_condition == 'incongruent'){
 		return SSD_incongruent
 	}
+}
+
+function getSSDCongruent(){
+	return SSD_congruent
+}
+
+function getSSDIncongruent(){
+	return SSD_incongruent
 }
 
 function getSSType(){
@@ -322,6 +340,8 @@ var appendData = function(){
 			})
 		}
 	}
+	console.log('post-trial SSD (c): ' + getSSDCongruent())
+	console.log('post-trial SSD (i): ' + getSSDIncongruent())
 }
 
 /* ************************************ */
@@ -345,8 +365,8 @@ var accuracy_thresh = 0.75
 var rt_thresh = 1000
 var missed_thresh = 0.10
 
-var SSD_congruent = true
-var SSD_incongruent = true
+var SSD_congruent = 350
+var SSD_incongruent = 350
 var maxSSD = 1000
 var minSSD = 0 
 var maxStopCorrect = 0.70
@@ -372,11 +392,11 @@ var flanker_boards = [['<div class = bigbox><div class = centerbox><div class = 
 		
 
 // var stims = createTrialTypes(practice_len)
-var prompt_text = '<ul style = "text-align:left;"><font color=white>'+
-					'<li>Indicate the identity of the middle letter</li>' +
-					'<li>Do not respond if you see a star around the letters!</li>' +
-					'<li>Do not slow down your responses to the letter to wait for the star.</li>' +
-				  '</font></ul>'
+// var prompt_text = '<ul style = "text-align:left;"><font color=white>'+
+// 					'<li>Indicate the identity of the middle letter</li>' +
+// 					'<li>Do not respond if you see a star around the letters!</li>' +
+// 					'<li>Do not slow down your responses to the letter to wait for the star.</li>' +
+// 				  '</font></ul>'
 
 var pathDesignSource = "/static/experiments/stop_signal_with_flanker__practice/designs/" //ADDED FOR fMRI SEQUENCES
 
@@ -514,7 +534,7 @@ for (i = 0; i < practice_len; i++) {
 		},
 		timing_response: 500,
 		timing_post_trial: 0,
-		prompt: prompt_text,
+		prompt: getPromptText,
 		on_finish: shiftStim,
 	}
 
@@ -535,7 +555,7 @@ for (i = 0; i < practice_len; i++) {
 		timing_SS: 500, //500
 		timing_post_trial: 0,
 		on_finish: appendData,
-		prompt: prompt_text,
+		prompt: getPromptText,
 		on_start: function(){
 			stoppingTracker = []
 			stoppingTimeTracker = []
@@ -639,7 +659,7 @@ var practiceNode = {
 		} else {
 			if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>We are going to try practice again to see if you can achieve higher accuracy.  Remember: <br>' + prompt_text 
+					'</p><p class = block-text>We are going to try practice again to see if you can achieve higher accuracy.  Remember: <br>' + getPromptText() 
 			}
 			if (missed_responses > missed_thresh){
 			feedback_text +=

@@ -166,23 +166,23 @@ var getCategorizeFeedback = function(){
 	if ((trial_id == 'practice_trial') && (jsPsych.data.getDataByTrialIndex(curr_trial).stop_signal_condition != 'stop')){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == jsPsych.data.getDataByTrialIndex(curr_trial).correct_response){
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptText()
 		} else if ((jsPsych.data.getDataByTrialIndex(curr_trial).key_press != jsPsych.data.getDataByTrialIndex(curr_trial).correct_response) && (jsPsych.data.getDataByTrialIndex(curr_trial).key_press != -1)){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Incorrect</font></div></div>' + getPromptText()
 	
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == -1){
 			
 			
-			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Respond Faster!</font></div></div>' + getPromptText()
 	
 		}
 	} else if ((trial_id == 'practice_trial') && (jsPsych.data.getDataByTrialIndex(curr_trial).stop_signal_condition == 'stop')){
 		if (jsPsych.data.getDataByTrialIndex(curr_trial).rt == -1){
-			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>Correct!</font></div></div>' + getPromptText()
 		} else if (jsPsych.data.getDataByTrialIndex(curr_trial).rt != -1){
-			return '<div class = fb_box><div class = center-text><font size = 20>There was a star.</font></div></div>' + prompt_text
+			return '<div class = fb_box><div class = center-text><font size = 20>There was a star.</font></div></div>' + getPromptText()
 		}
 	}
 }
@@ -413,11 +413,15 @@ var flanker_boards = [['<div class = bigbox><div class = centerbox><div class = 
 		
 
 // var stims = createTrialTypes(practice_len)
-var prompt_text = '<ul style = "text-align:left;"><font color=white>'+
-					'<li>Indicate the identity of the middle letter</li>' +
-					'<li>Do not respond if you see a star around the letters!</li>' +
-					'<li>Do not slow down your responses to the letter to wait for the star.</li>' +
-				  '</font></ul>'
+var getPromptText = function(){
+	return '<ul style = "text-align:left;"><font color=white>'+
+			'<li>Indicate the identity of the middle letter</li>' +
+			'<li>If the middle letter is H: '+getPossibleResponses()[0][0]+'.</li>'+
+		    '<li>If the middle letter is F, press your '+getPossibleResponses()[1][0]+'.</li>'+
+			'<li>Do not respond if you see a star around the letters!</li>' +
+			'<li>Do not slow down your responses to the letter to wait for the star.</li>' +
+			'</font></ul>'
+}
 
 var pathDesignSource = "/static/experiments/stop_signal_with_flanker__fmri/designs/" //ADDED FOR fMRI SEQUENCES
 
@@ -782,7 +786,7 @@ for (i = 0; i < refresh_len; i++) {
 		},
 		timing_response: 500,
 		timing_post_trial: 0,
-		prompt: prompt_text,
+		prompt: getPromptText,
 		on_finish: shiftStim,
 	}
 
@@ -803,7 +807,7 @@ for (i = 0; i < refresh_len; i++) {
 		timing_SS: 500, //500
 		timing_post_trial: 0,
 		on_finish: appendData,
-		prompt: prompt_text,
+		prompt: getPromptText,
 		on_start: function(){
 			stoppingTracker = []
 			stoppingTimeTracker = []
@@ -897,7 +901,7 @@ var refreshNode = {
 	
 		if (accuracy < accuracy_thresh){
 			refresh_feedback_text +=
-				'</p><p class = block-text>We are going to try practice again to see if you can achieve higher accuracy.  Remember: <br>' + prompt_text 
+				'</p><p class = block-text>We are going to try practice again to see if you can achieve higher accuracy.  Remember: <br>' + getPromptText()
 		}
 		if (missed_responses > missed_thresh){
 			refresh_feedback_text +=
@@ -1021,7 +1025,7 @@ var testNode0 = {
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text 
+					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptText()
 		}
 		
 		if (missed_responses > missed_thresh){
@@ -1145,7 +1149,7 @@ var testNode = {
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + prompt_text 
+					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptText()
 		}
 		
 		if (missed_responses > missed_thresh){

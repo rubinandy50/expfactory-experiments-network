@@ -506,7 +506,7 @@ var end_block = {
 	data: {
 		trial_id: "end",
 	},
-	timing_response: 180000,
+	timing_response: 10000,
 	text: '<div class = centerbox><p class = center-block-text>Thanks for completing this task!</p><p class = center-block-text>Press <strong>enter</strong> to continue.</p></div>',
 	cont_key: [32],
 	timing_post_trial: 0,

@@ -4,3 +4,5 @@
 test.sh
 web/
 rest__fmri/Rest_v6.mp4
+.ipynb_checkpoints/
+*Untitled*.ipynb

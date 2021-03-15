@@ -189,7 +189,7 @@ var randomDraw = function(lst) {
   return lst[index]
 }
 							 
-var createTrialTypes = function(numTrialsPerBlock, des_events){
+var createTrialTypes = function(numTrialsPerBlock){
 	
 	var stims = []
 	for(var numIterations = 0; numIterations < numTrialsPerBlock/(directed_cond_array.length*stop_signal_conditions.length); numIterations++){

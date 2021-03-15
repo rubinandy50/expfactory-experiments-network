@@ -193,24 +193,25 @@ var createTrialTypes = function(numTrialsPerBlock, des_events){
 	var stims = []
 	for(var numIterations = 0; numIterations < numTrialsPerBlock; numIterations++){
 		event_str = des_events.shift()
+		event_pieces = event_str.split('_') // order is stop_df
 		
-		if (event_str.includes('stop')){
-			stop_signal_condition = 'stop'
-		} else {
-			stop_signal_condition = 'go'
-		}
+		// if (event_str.includes('stop')){
+		// 	stop_signal_condition = 'stop'
+		// } else {
+		// 	stop_signal_condition = 'go'
+		// }
 
-		if (event_str.includes('pos')){
-			directed_condition = 'pos'
-		} else if (event_str.includes('neg')) {
-			directed_condition = 'neg'
-		} else {
-			directed_condition = 'con'
-		}
+		// if (event_str.includes('pos')){
+		// 	directed_condition = 'pos'
+		// } else if (event_str.includes('neg')) {
+		// 	directed_condition = 'neg'
+		// } else {
+		// 	directed_condition = 'con'
+		// }
 		
 		stim = {
-			stop_signal_condition: stop_signal_condition,
-			directed_condition: directed_condition
+			stop_signal_condition: event_pieces[0],
+			directed_condition: event_pieces[1]
 		}
 		
 		stims.push(stim)
@@ -701,7 +702,7 @@ var design_setup_block = {
 	},
 	questions: [
 		[
-			"<p class = center-block-text>Design permutation (0-4):</p>"
+			"<p class = center-block-text>Design permutation (0-1):</p>"
 		]
 	], on_finish: async function(data) {
 		design_perm =parseInt(data.responses.slice(7, 10))

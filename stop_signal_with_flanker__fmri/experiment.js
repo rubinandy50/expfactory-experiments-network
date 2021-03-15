@@ -540,7 +540,7 @@ var design_setup_block = {
 	},
 	questions: [
 		[
-			"<p class = center-block-text>Design permutation (0-4):</p>"
+			"<p class = center-block-text>Design permutation (0-1):</p>"
 		]
 	], on_finish: async function(data) {
 		design_perm = parseInt(data.responses.slice(7, 10))

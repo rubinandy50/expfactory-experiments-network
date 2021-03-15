@@ -377,7 +377,7 @@ var credit_var = 0
 // Set up variables for stimuli
 var practice_len = 12 // must be divisible by 12, [3 (go,go,stop) by 2 (flanker conditions) by 2 (flanker letters h and s)]
 var refresh_len = 6
-var exp_len = 300 // must be divisible by 12
+var exp_len = 240 // must be divisible by 12
 var numTrialsPerBlock = 60; // divisible by 12
 var numTestBlocks = exp_len / numTrialsPerBlock
 

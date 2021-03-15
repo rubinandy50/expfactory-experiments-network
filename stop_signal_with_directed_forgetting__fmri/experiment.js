@@ -432,7 +432,7 @@ var credit_var = 0
 // task specific variables
 // Set up variables for stimuli
 var practice_len = 12 // 12 must be divisible by 12, [3 (go,go,stop) by 4 (directed_forgetting conditions)]
-var refresh_len = 12
+var refresh_len = 6
 var exp_len = 144 //180 must be divisible by 12
 var numTrialsPerBlock = 48; // 36 divisible by 12
 var numTestBlocks = exp_len / numTrialsPerBlock

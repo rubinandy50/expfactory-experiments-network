@@ -432,7 +432,7 @@ var credit_var = 0
 // task specific variables
 // Set up variables for stimuli
 var practice_len = 12 // 12 must be divisible by 12, [3 (go,go,stop) by 4 (directed_forgetting conditions)]
-var refresh_len = 12
+var refresh_len = 6
 var exp_len = 144 //180 must be divisible by 12
 var numTrialsPerBlock = 48; // 36 divisible by 12
 var numTestBlocks = exp_len / numTrialsPerBlock
@@ -1171,33 +1171,33 @@ var refreshNode = {
 		var ave_rt = go_rt / sum_go_responses
 		var stop_acc = stop_correct / stop_trials
 	
-		feedback_text = "</p><p class = block-text>Done with this practice. <br>Please take this time to read your feedback and to take a short break!"
+		feedback_text = "</p><p class = instruct-text>Done with this practice. <br>Please take this time to read your feedback and to take a short break!"
 		
 	
 		if (accuracy < accuracy_thresh) {
 			feedback_text +=
-					'</p><p class = block-text>Remember: <br>' + getPromptTextList()
+					'</p><p class = instruct-text>Remember: <br>' + getPromptTextList()
 		}
 				
 		if (missed_responses > missed_thresh){
 			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+					'</p><p class = instruct-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		}
 
 		if (ave_rt > rt_thresh){
 			feedback_text += 
-				'</p><p class = block-text>You have been responding too slowly.'
+				'</p><p class = instruct-text>You have been responding too slowly.'
 		}
 		
 		if (stop_correct === maxStopCorrectPractice){
 			feedback_text +=
-			'</p><p class = block-text>You have been responding too slowly.  Please respond as quickly and accurately to each stimulus that requires a response.'
+			'</p><p class = instruct-text>You have been responding too slowly.  Please respond as quickly and accurately to each stimulus that requires a response.'
 		
 		}
 		
 		if (stop_correct === minStopCorrectPractice){
 			feedback_text +=
-			'</p><p class = block-text>You have not been stopping your response when stars are present. Please try your best to stop your response if you see a star.'
+			'</p><p class = instruct-text>You have not been stopping your response when stars are present. Please try your best to stop your response if you see a star.'
 		}
 		
 		
@@ -1278,32 +1278,32 @@ var testNode0 = {
 		var stop_acc = stop_correct / stop_trials
 	
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
-		feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
+					'</p><p class = instruct-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
 		}
 		
 		if (missed_responses > missed_thresh){
 			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+					'</p><p class = instruct-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		}
 
       	if (ave_rt > rt_thresh){
         	feedback_text += 
-            	'</p><p class = block-text>You have been responding too slowly.'
+            	'</p><p class = instruct-text>You have been responding too slowly.'
       	}
 		
 		if (stop_correct > maxStopCorrect){
 			feedback_text +=
-			'</p><p class = block-text>You have been responding too slowly.  Please respond as quickly and accurately to each stimulus that requires a response.'
+			'</p><p class = instruct-text>You have been responding too slowly.  Please respond as quickly and accurately to each stimulus that requires a response.'
 		
 		}
 		
 		if (stop_correct < minStopCorrect){
 			feedback_text +=
-			'</p><p class = block-text>You have not been stopping your response when stars are present.  Please try your best to stop your response if you see a star.'
+			'</p><p class = instruct-text>You have not been stopping your response when stars are present.  Please try your best to stop your response if you see a star.'
 		
 		}
 		stims = createTrialTypes(numTrialsPerBlock, des_events)
@@ -1378,38 +1378,38 @@ var testNode = {
 		var stop_acc = stop_correct / stop_trials
 	
 		feedback_text = "<br>Please take this time to read your feedback and to take a short break! Press enter to continue"
-		feedback_text += "</p><p class = block-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
+		feedback_text += "</p><p class = instruct-text>You have completed: "+testCount+" out of "+numTestBlocks+" blocks of trials."
 		
 		if (accuracy < accuracy_thresh){
 			feedback_text +=
-					'</p><p class = block-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
+					'</p><p class = instruct-text>Your accuracy is too low.  Remember: <br>' + getPromptTextList()
 		}
 		
 		if (missed_responses > missed_thresh){
 			feedback_text +=
-					'</p><p class = block-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
+					'</p><p class = instruct-text>You have not been responding to some trials.  Please respond on every trial that requires a response.'
 		}
 
       	if (ave_rt > rt_thresh){
         	feedback_text += 
-            	'</p><p class = block-text>You have been responding too slowly.'
+            	'</p><p class = instruct-text>You have been responding too slowly.'
       	}
 		
 		if (stop_correct > maxStopCorrect){
 			feedback_text +=
-			'</p><p class = block-text>You have been responding too slowly.  Please respond as quickly and accurately to each stimulus that requires a response.'
+			'</p><p class = instruct-text>You have been responding too slowly.  Please respond as quickly and accurately to each stimulus that requires a response.'
 		
 		}
 		
 		if (stop_correct < minStopCorrect){
 			feedback_text +=
-			'</p><p class = block-text>You have not been stopping your response when stars are present.  Please try your best to stop your response if you see a star.'
+			'</p><p class = instruct-text>You have not been stopping your response when stars are present.  Please try your best to stop your response if you see a star.'
 		
 		}
 	
 		if (testCount == numTestBlocks){
 			feedback_text +=
-					'</p><p class = block-text>Done with this test. Press Enter to continue.<br> If you have been completing tasks continuously for an hour or more, please take a 15-minute break before starting again.'
+					'</p><p class = instruct-text>Done with this test. Press Enter to continue.<br> If you have been completing tasks continuously for an hour or more, please take a 15-minute break before starting again.'
 			return false
 		} else {
 			stims = createTrialTypes(numTrialsPerBlock, des_events)

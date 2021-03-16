@@ -12,24 +12,6 @@ function getdesignEvents(design_num) {
 	return x
 } 
 
-//Functions added for in-person sessions
-function genITIs() { 
-	mean_iti = 0.5 //mean and standard deviation of 0.5 secs
-	min_thresh = 0
-	max_thresh = 4
-
-	lambda = 1/mean_iti
-	iti_array = []
-	for (i=0; i < exp_len; i++) {
-		curr_iti = - Math.log(Math.random()) / lambda;
-		while (curr_iti > max_thresh || curr_iti < min_thresh) {
-			curr_iti = - Math.log(Math.random()) / lambda;
-		}
-		iti_array.push(curr_iti*1000) //convert ITIs from seconds to milliseconds
-
-	}
-	return(iti_array)
-}
 
 function getITI_stim() { //added for fMRI compatibility
 	var currITI = ITIs_stim.shift()
@@ -131,7 +113,6 @@ var getRefreshFeedbackTiming = function() {
 var getRefreshResponseEnds = function() {
 	return refresh_response_ends
 }
-//
 
 
 
@@ -700,8 +681,7 @@ var SSD_setup_block = {
 	], on_finish: function(data) {
 		SSD = parseInt(data.responses.slice(7, 10))
 		SSD = math.max(100,math.min(400,SSD))
-		ITIs_stim = genITIs()
-		ITIs_resp = ITIs_stim.slice(0) //make a copy of ITIs so that timing_stimulus & timing_response are the same
+
 	}
 }
 

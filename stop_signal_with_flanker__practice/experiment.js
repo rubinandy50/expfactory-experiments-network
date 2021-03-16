@@ -377,7 +377,7 @@ var minStopCorrectPractice = 0
 
  
 // var possible_responses = [['F Key', 70],['H Key', 72]]
-var possible_responses = [['index finger', 89], ['middle finger', 71]]
+var possible_responses = [['index finger', 37], ['middle finger', 39]]
 
 
 var current_trial = 0

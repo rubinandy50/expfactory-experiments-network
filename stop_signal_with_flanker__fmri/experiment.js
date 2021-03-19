@@ -1200,7 +1200,7 @@ stop_signal_with_flanker__fmri_experiment.push(SSD_incongruent_setup_block) //ex
 // stop_signal_with_flanker__fmri_experiment.push(practiceNode)
 // stop_signal_with_flanker__fmri_experiment.push(feedback_block)
 
-// test_keys(stop_signal_with_flanker__fmri_experiment, [possible_responses[0][1], possible_responses[1][1]])
+test_keys(stop_signal_with_flanker__fmri_experiment, [possible_responses[0][1], possible_responses[1][1]])
 stop_signal_with_flanker__fmri_experiment.push(refreshNode)
 stop_signal_with_flanker__fmri_experiment.push(refresh_feedback_block)
 

@@ -816,11 +816,11 @@ var refreshNode = {
 		
 		
 			'</p><p class = block-text>Done with this practice.' 
-			stims = createTrialTypes(numTrialsPerBlock, des_events)
-			return false
+			
 			}
 			
-		
+		stims = createTrialTypes(numTrialsPerBlock, des_events)
+		return false
 		}
 	
 	}

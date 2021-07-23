@@ -390,7 +390,7 @@ function getPossibleResponses() {
 	if (getMotorPerm()==0) {
 		return possible_responses
 	} else if (getMotorPerm()==1) {
-		return [['middle finger', 37],['index finger', 39]]
+		return [['middle finger', 39],['index finger', 37]]
 	}
 }
 

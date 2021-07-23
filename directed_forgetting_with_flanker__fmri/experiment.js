@@ -702,7 +702,7 @@ for (i = 0; i < refresh_len; i++) {
 		data: {
 			trial_id: "practice_cue",
 		},
-		choices: false,
+		choices: 'none',
 		timing_post_trial: 0,
 		timing_stim: 1000, //1000
 		timing_response: 1000,

@@ -20,7 +20,7 @@ function getdesignEvents(design_num) {
 	return x
 }  
 
-
+// Mturk specific, not relavent for scanner trials
 function assessPerformance() {
 	/* Function to calculate the "credit_var", which is a boolean used to
 	credit individual experiments in expfactory. */
@@ -111,6 +111,7 @@ var getCategorizeFeedback = function(){
 	}
 }
 
+
 //this adds the probe shown, trial number, and whether it was a correct trial to the data
 var appendProbeData = function(data) {
 	var curr_trial = jsPsych.progress().current_trial_global
@@ -147,6 +148,7 @@ var appendProbeData = function(data) {
 		forget_set: forgetSet
 	})
 	
+	current_trial = current_trial + 1
 	
 	if (jsPsych.data.getDataByTrialIndex(curr_trial).key_press == correct_response){
 		jsPsych.data.addDataToLastTrial({
@@ -575,26 +577,26 @@ var fixation_block = {
 	}
 }
 
-var ITI_fixation_block = {
-	type: 'poldrack-single-stim',
-	is_html: true,
-	choices: getChoices,
-	data: {
-		trial_id: "ITI_fixation"
-	},
-	timing_post_trial: 0,
-	stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
-	timing_stim: 1000, //1000
-	timing_response: 1000, //1000
-	fixation_default: true,
-	on_finish: function() {
-		jsPsych.data.addDataToLastTrial({
-			exp_stage: exp_stage,
-			current_trial: current_trial
-		})
-		current_trial = current_trial + 1
-	}
-}
+//	var ITI_fixation_block = {
+//		type: 'poldrack-single-stim',
+//		is_html: true,
+//		choices: getChoices,
+//		data: {
+//			trial_id: "ITI_fixation"
+//		},
+//		timing_post_trial: 0,
+//		stimulus: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>',
+//		timing_stim: 1000, //1000
+//		timing_response: 1000, //1000
+//		fixation_default: true,
+//		on_finish: function() {
+//			jsPsych.data.addDataToLastTrial({
+//				exp_stage: exp_stage,
+//				current_trial: current_trial
+//			})
+//			current_trial = current_trial + 1
+//		}
+//	}
 
 var training_block = {
 	type: 'poldrack-single-stim',
@@ -619,7 +621,7 @@ var cue_block = {
 		trial_id: "cue",
 		exp_stage: "test"
 	},
-	choices: false,
+	choices: 'none',
 	timing_post_trial: 0,
 	timing_stim: 1000, //1000
 	timing_response: 1000 //1000
@@ -636,11 +638,11 @@ var probe_block = {
 	choices: getChoices,
 	timing_post_trial: 0,
 	timing_stim: 1000, //1000
-	timing_response: 1000, //1000
+	timing_response: 2000, //2000
 	response_ends_trial: false,
 	on_finish: appendProbeData,
-	fixation_default: true
-	
+	fixation_default: true,
+	fixation_stim: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>'	
 };
 
 var intro_test_block = {
@@ -676,16 +678,20 @@ var intro_test_block = {
 var refresh_probe_block = {
 	type: 'poldrack-single-stim',
 	stimulus: getProbeHTML,
-	choices: getChoices,
+	is_html: true,
 	data: {trial_id: "refresh_trial", 
 		   exp_stage: "refresh"
 		   },
+	choices: getChoices,
 	timing_stim: 1000, //1000
-	timing_response: 1000, //1000
 	timing_post_trial: 0,
 	is_html: true,
 	prompt: getPromptTaskList,
-	on_finish: appendProbeData
+	timing_response: 2000, //2000
+	response_ends_trial: false,
+	on_finish: appendProbeData,
+	fixation_default: true,
+	fixation_stim: '<div class = centerbox><div class = fixation><span style="color:white">+</span></div></div>'
 };
 
 var feedback_text = 
@@ -1024,7 +1030,6 @@ for (i = 0; i < (refresh_length); i++) {
 	refreshTrials.push(refresh_cue_block);
 	refreshTrials.push(refresh_fixation_block);
 	refreshTrials.push(refresh_probe_block);
-	refreshTrials.push(refresh_ITI_fixation_block);
 	refreshTrials.push(categorize_block);
 }
 
@@ -1104,7 +1109,6 @@ for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
 	testTrials0.push(cue_block);
 	testTrials0.push(fixation_block);
 	testTrials0.push(probe_block);
-	testTrials0.push(ITI_fixation_block);
 }
 
 var testCount = 0
@@ -1205,7 +1209,6 @@ for (i = 0; i < numTrialsPerBlock; i++) { //numTrialsPerBlock
 	testTrials.push(cue_block);
 	testTrials.push(fixation_block);
 	testTrials.push(probe_block);
-	testTrials.push(ITI_fixation_block);
 }
 
 var testNode = {

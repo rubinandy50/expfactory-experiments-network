@@ -647,7 +647,7 @@ var cue_directed_block = {
 	data: {
 		trial_id: "cue",
 	},
-	choices: false,
+	choices: 'none',
 	timing_post_trial: 0,
 	timing_stim: 1000, //1000
 	timing_response: 1000 //1000

